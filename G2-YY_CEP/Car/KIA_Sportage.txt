@@ -1,9 +1,0 @@
-================================
-                        CAR INFORMATION
-                ================================
-                Car Name: KIA
-                Model Name: Sportage
-                Seating Capacity: 5
-                Price Per Day: 7000
-                No of Cars: 0
-                Avalaibility: Available

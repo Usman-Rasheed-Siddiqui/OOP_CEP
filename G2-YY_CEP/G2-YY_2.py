@@ -32,17 +32,17 @@ class Cars:
         self.file_name = f"Car/{self.brand}_{self.model}.txt"
 
     def set_car_info(self):
-        self.car_info = f'''
-                ================================
-                        CAR INFORMATION
-                ================================
-                Car Name: {self.brand}
-                Model Name: {self.model}
-                Seating Capacity: {self.seating_capacity}
-                Price Per Day: {self.price_per_day}
-                No of Cars: {self.no_of_cars}
-                Avalaibility: {"Available" if self.available else "Not Available"}
-                '''
+        self.car_info = (
+                "================================\n"
+                "       CAR INFORMATION\n"
+                "================================\n"
+                f"Car Name: {self.brand}\n"
+                f"Model Name: {self.model}\n"
+                f"Seating Capacity: {self.seating_capacity}\n"
+                f"Price Per Day: {self.price_per_day}\n"
+                f"No of Cars: {self.no_of_cars}\n"
+                f"Availability: {"Available" if self.available else "Not Available"}\n"
+        )
     def get_car_info(self):
         return self.car_info
 
@@ -64,15 +64,20 @@ class Cars:
 class Administrator(Cars):
 
     def __init__(self):
-        Cars.__init__(self,  brand="", model="", seating_capacity=0, price_per_day=0, no_of_cars=0, available=True)
+        super().__init__()
+        self.cars = []
 
     def update_car(self):
         '''To Update or Add the record of car'''
-        Cars.get_file_name(self)
-        Cars.get_car_info(self)
+        self.set_car_info()
+        file_name = self.get_file_name()
+        
+        os.makedirs("Car", exist_ok=True)
         with open(self.file_name, "w") as file:
             file.write(self.car_info.strip())
+        
         print(f"{self.brand} {self.model} information saved successfully")
+    
 
     def add_car(self):
         '''Enter information of a car to be added'''
@@ -81,10 +86,24 @@ class Administrator(Cars):
         self.cars.append({self.brand, self.model})
         self.seating_capacity = int(input("Enter Seating Capacity: "))
         self.price_per_day = int(input("Enter Price Per Day: "))
+        self.no_of_cars = int(input("Enter No of Cars: "))
         self.available = True
-        self.update_car()
 
-C1 = Cars(input("Enter Brand Name: "), input("Enter Model Name: "), int(input("Enter Seating Capacity: ")),
-              int(input("Enter Price Per Day: ")), int(input("Enter No of Cars: ")), input("Enter Availability (True/False): ").strip().lower() == "true")
-C1.set_car_info()
-print(C1.display_car_info())
+        car = Cars(self.brand, self.model, self.seating_capacity, self.price_per_day, self.no_of_cars, self.available)
+        self.cars.append(car)
+        print(f"{self.brand}_{self.model} added successfully")
+        self.set_car_info()
+        with open(f"Car/{self.brand}_{self.model}.txt", "w") as car_file:
+            car_file.write(self.get_car_info())
+
+    def show_car(self):
+        '''To Check information of a car'''
+        if not self.cars:
+            print("No Cars Available")
+        else:
+            for car in self.cars:
+                print(car.display_car_info())
+
+admin = Administrator()
+admin.add_car()
+print(admin.display_car_info())
