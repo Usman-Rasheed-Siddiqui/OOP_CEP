@@ -3,10 +3,10 @@ import json
 class FileHandler():
 
     @staticmethod
-    def save_to_file(data, filename):
+    def save_to_file(data_list, filename):
         """Saves information to txt file in key = value format"""
         with open(filename, "w") as file:
-            for item in data:
+            for item in data_list:
                 file.write(f"{item.__dict__}\n")
 
     @staticmethod
@@ -21,6 +21,3 @@ class FileHandler():
         except FileNotFoundError:
             return []
         return data
-
-
-
