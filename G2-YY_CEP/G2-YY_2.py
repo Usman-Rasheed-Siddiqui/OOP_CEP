@@ -1,10 +1,10 @@
 
 import os
-
+from abc import ABC, abstractmethod
 class Cars:
     '''A Class of Cars Used to check on the number of cars available for rent and their brand, models
     and seating capacity.'''
-    def __init__(self, brand="", model="", seating_capacity=0, price_per_day=0,no_of_cars=0, available=False):
+    def __init__(self, brand="", model="", seating_capacity=0, price_per_day=0,no_of_cars=0, available=True):
         self.brand = brand
         self.seating_capacity = seating_capacity
         self.model = model
@@ -12,7 +12,7 @@ class Cars:
         self.no_of_cars = no_of_cars
         self.available = available
 
-
+    @abstractmethod
     def display_available_cars(self):
         pass
 
