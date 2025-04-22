@@ -1,7 +1,8 @@
 from abc import ABC, abstractmethod
 import uuid
+from file_handler.file_handler import FileHandler
 
-class Vehicle(ABC):
+class Vehicle(ABC, FileHandler):
     """A class which sets the root for all the cars in the rental system. It is an abstract class.
     Attributes: car_id, brand, model, seating_capacity, price_per_day, availability
     Methods: display_vehicle_info() {abstract method}, display_all_vehicles()"""
@@ -20,7 +21,7 @@ class Vehicle(ABC):
 
     def display_all_vehicles(self):
         """To display info of all vehicles"""
-        vehicles = []           # Needs list from File Handler
+        vehicles = self.load_from_file("cars.txt")
         for num, vehicle in enumerate(vehicles):
             print(f"{num}.", end=" ")
             for name, attribute in vehicle.items():

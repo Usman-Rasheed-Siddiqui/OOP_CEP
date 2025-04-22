@@ -29,3 +29,4 @@ Expected Days : {self.days}
 Expected Cost: {self.expected_cost}
 {"="*30}
 """
+
