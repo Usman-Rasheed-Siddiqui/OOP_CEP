@@ -3,10 +3,13 @@ class FileHandler:
 
     def save_to_file(self, data, file):
         with open(file, 'w') as file:
-            file.write(data)
+            for item in data:
+                file.write(str(item)+"\n")
 
     def load_from_file(self, file):
+        data = []
         with open(file, 'r') as file:
-            data = file.read().strip()
+            for line in file:
+                data.append(eval(line))
 
         return data

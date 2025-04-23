@@ -1,15 +1,18 @@
 from datetime import datetime
 from rental import Rental
+from vehicle.car import Car
+from user.customer import Customer
+from file_handler.file_handler import FileHandler
 
 class RentalManager(Rental):
-    def __init__(self, days, brand, model, seating_capacity, price_per_day, fuel_type,
-                 car_type, fuel_average, first_name, last_name, password):
-        super().__init__(days, brand, model, seating_capacity, price_per_day, fuel_type,
-                 car_type, fuel_average, first_name, last_name, password)
+    def __init__(self, days, car: Car, customer: Customer):
+        super().__init__(days, car, customer)
+        self.total_cost = self.days * self.car.price_per_day
+        self.file_handler = FileHandler()
 
-        self.available_cars =self.load_from_file("available_cars.txt")
-        self.rented_cars = self.load_from_file("rented_cars.txt")
-        self.rental_history = self.load_from_file(f"car_rental_history/{self.brand}_{self.model}.txt")
+        self.available_cars =self.file_handler.load_from_file("available_cars.txt")
+        self.rented_cars = self.file_handler.load_from_file("rented_cars.txt")
+        self.rental_history = self.file_handler.load_from_file(f"car_rental_history/{self.car.brand}_{self.car.model}.txt")
 
 
     def save_rental_history(self):
@@ -37,41 +40,51 @@ class RentalManager(Rental):
     def process_rental(self):
 
         rental = {
-            "car_id": {self.car_id},
-            "customer": {self.name},
+            "car_id": {self.car.car_id},
+            "customer": {self.customer.name},
             "car": {self.vehicle},
             "rental_data": {self.rental_date},
             "return_date": {self.return_date},
             "expected_days": {self.days},
             "expected_cost": {self.expected_cost},
         }
+        for car in self.rented_cars:
+            if car["car_id"] != rental["car_id"]:
+                self.rented_cars.append(car)
 
-        self.available_cars.remove(rental["car_id"])
-        self.rented_cars.append(rental["car_id"])
-        self.save_to_file(self.available_cars, "available_cars.txt")
-        self.save_to_file(self.rented_cars, "rented_cars.txt")
+        for car in self.available_cars:
+            if car["car_id"] == rental["car_id"]:
+                self.available_cars.remove(car)
+
+        self.file_handler.save_to_file(self.available_cars, "available_cars.txt")
+        self.file_handler.save_to_file(self.rented_cars, "rented_cars.txt")
 
         return rental
 
     def process_return(self):
 
         self.days = self.return_date - self.rental_date
-        self.total_cost = self.days * self.price_per_day
 
         giveaway = {
-            "car_id": {self.car_id},
-            "customer": {self.name},
+            "car_id": {self.car.car_id},
+            "customer": {self.customer.name},
             "car": {self.vehicle},
             "rental_data": {self.rental_date},
             "return_date": datetime.now(),
             "total_days": {self.days},
             "total_cost": {self.total_cost},
-
         }
 
-        self.available_cars.append(giveaway["car_id"])
-        self.rented_cars.remove(giveaway["car_id"])
-        self.save_to_file(self.available_cars, "available_cars.txt")
-        self.save_to_file(self.rented_cars, "rented_cars.txt")
+        for car in self.available_cars:
+            if car["car_id"] != giveaway["car_id"]:
+                self.available_cars.append(car)
+
+        for car in self.rented_cars:
+            if car["car_id"] == giveaway["car_id"]:
+                self.rented_cars.remove(car)
+
+        self.file_handler.save_to_file(self.available_cars, "available_cars.txt")
+        self.file_handler.save_to_file(self.rented_cars, "rented_cars.txt")
+
         return giveaway
 
