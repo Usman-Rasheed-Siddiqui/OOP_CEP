@@ -1,4 +1,4 @@
-from user import User
+from user.user import User
 from rental_management.rental_manager import RentalManager
 from datetime import datetime
 from file_handler.file_handler import FileHandler
@@ -78,19 +78,20 @@ Balance : {self.balance}
         self.rented_cars += 1
         self.user_rental_history.append(renting)
 
-    def returning(self, days = None, car = None, brand = None, model = None):
+    def returning(self,customer,car_id, days = None, car = None, brand = None, model = None):
 
         rental_manager = RentalManager(days, car, customer=self)
         rental_manager.process_return()
         car = Car(brand, model, None, None, None, None, None)
 
         for user in self.user_rental_history:
-            if user["name"] == self.name:
+            if user["name"] == customer:
                 for rent in user:
-                    if rent["car_id"] == car.car_id:
+                    if rent["car_id"] == car.car_id == car_id:
                         rent["return_date"] = datetime.now()
                     else:
                         raise Exception("No car rented with this ID")
+
 
     def write_feedback(self, feedback):
         feedbacks = self.file_handler.load_from_file("feedbacks.txt")
@@ -100,3 +101,13 @@ Balance : {self.balance}
         }
         feedbacks.append(feedback)
         self.file_handler.save_to_file(feedbacks, "feedbacks.txt")
+
+    def password_check(self, name, password, page):
+        for user in self.user_rental_history:
+            while range == 3:
+                if user["Name"].lower() == name.lower() and user["password"] == password:
+                    print("Password match")
+                    return page
+                else:
+                    raise Exception("Password mismatch. Try again (3 attempts total)")
+        return None

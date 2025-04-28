@@ -1,4 +1,4 @@
-from user import User
+from user.user import User
 from file_handler.file_handler import FileHandler
 import uuid
 
@@ -47,3 +47,12 @@ class Admin(User):
         feedbacks = self.file_handler.load_from_file("feedbacks.txt")
         for feedback in feedbacks:
             print(f"{feedback["Name"]} : {feedback['Feedback']}")
+
+    def check_admin_password(self, name, password, dashboard):
+        while range == 3:
+            if name == "admin" and password == "admin 123":
+                print("Welcome to the dashboard...")
+                return dashboard
+            else:
+                print("Wrong password. Try again (3 attempts total)")
+        return None
