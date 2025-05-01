@@ -1,4 +1,5 @@
 from vehicle import Vehicle
+from file_handler.file_handler import FileHandler
 
 class Car(Vehicle):
     """A car which sets information for a specific vehicle. It is the child class of 'Vehicle'.
@@ -7,10 +8,10 @@ class Car(Vehicle):
     Methods: display_vehicle_info(), rental_history() """
     def __init__(
             self,
-            brand,
-            model, seating_capacity,
-            price_per_day, fuel_type, car_type,
-            fuel_average,availability=True,
+            brand="",
+            model="", seating_capacity="",
+            price_per_day="", fuel_type="", car_type="",
+            fuel_average="",availability=True,
     ):
 
         super().__init__(brand, model, seating_capacity, price_per_day, availability)
@@ -20,19 +21,40 @@ class Car(Vehicle):
 
 
     def display_vehicle_info(self):
+        file_handler = FileHandler()
+        data = file_handler.load_from_file("cars.txt")
 
-        return f"""
-{"="*30}
-        CAR INFORMATION
-{"="*30}
-Car ID : {self.car_id}
-Car : {self.brand} {self.model}
-Car Type: {self.car_type}
-{"="*30}
-Seating Capacity : {self.seating_capacity}
-Price/Day : {self.price_per_day}
-Fuel Type : {self.fuel_type}
-Fuel Average : {self.fuel_average}
-Availability : {"Available" if self.availability else "Not Available"}
-{"="*30}
-"""
+        while True:
+            i_d = input("Enter the car id (type e to quit): ")
+            if i_d == "e":
+                break
+
+            elif len(i_d) != 36:
+                print("Invalid car id. Enter a valid car id. (36 characters)")
+                continue
+
+            try:
+                for car in data:
+                    if car["car_id"] == i_d and car["availability"]:
+                        print(f"""
+{"="*45}    
+             CAR INFORMATION
+{"="*45}
+Car ID : {car["car_id"]}
+Car : {car["brand"]} {car["model"]}
+Car Type: {car["car_type"]}
+{"="*45}
+Seating Capacity : {car["seating_capacity"]}
+Price/Day : {car["price_per_day"]} PKR
+Fuel Type : {car["fuel_type"]}
+Fuel Average : {car["fuel_average"]}
+Availability : {"Available" if car["availability"] else "Not Available"}
+{"="*45}
+""")
+
+                print("Car with this ID not available.")
+            except KeyError as e:
+                raise ValueError("Data format error:",e)
+
+C1 = Car()
+C1.display_vehicle_info()

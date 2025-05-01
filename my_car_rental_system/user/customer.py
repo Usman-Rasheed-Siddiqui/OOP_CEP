@@ -1,11 +1,11 @@
-from user.user import User
+from user import User
 from rental_management.rental_manager import RentalManager
 from datetime import datetime
 from file_handler.file_handler import FileHandler
 from vehicle.car import Car
 
 class Customer(User):
-    def __init__(self, first_name, last_name, password, address, balance):
+    def __init__(self, first_name="", last_name="", password="", address="", balance=""):
         super().__init__(first_name, last_name, password)
         self.address = address
         self.balance = balance
@@ -13,29 +13,34 @@ class Customer(User):
         self.user_rental_history = self.file_handler.load_from_file("users.txt")
         self.rented_cars = 0
 
+    def check_rent(self):
+        if self.rented_cars == 1:
+            print("You cannot rent a car. You have already a car rented")
 
     def create_an_account(self, first_name, last_name, password, address, balance):
 
-        self.first_name = first_name
-        self.last_name = last_name
-        self.password = password
-        self.address = address
-        self.balance = balance
+        self.first_name = input("Enter your first name: ")
+        self.last_name = input("Enter your last name: ")
+        self.password = input("Enter your password: ")
+        self.address = input("Enter your address: ")
+        self.balance = int(input("Enter your balance: "))
         self.rented_cars = 0
 
         new_user = {
-            "Name": {self.name},
-            "Password": {self.password},
-            "Address": {self.address},
-            "Balance": self.balance,
-            "Rented Cars" : {self.rented_cars},
-            "Recent Rent": None,
+            "name": {self.name},
+            "password": {self.password},
+            "address": {self.address},
+            "balance": self.balance,
+            "rented Car" : {self.rented_cars},
+            "recent Rent": None,
         }
         self.user_rental_history.append(new_user)
         self.file_handler.save_to_file(self.user_rental_history,"users.txt")
         return new_user
 
     def display_user_info(self):
+        data = self.user_rental_history
+
         return f"""
 {"="*30}
 USER INFORMATION

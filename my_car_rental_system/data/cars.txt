@@ -1,0 +1,3 @@
+{ "car_id": "2c026418-6111-4d4a-a91b-dffd2626ec7b", "brand": "Toyota", "model": "Corolla", "seating_capacity": 5, "price_per_day": 55, "car_type": "Sedan", "fuel_type": "Petrol", "fuel_average": 16, "availability": True }
+{ "car_id": "c9e4ed72-f71f-48d7-b79e-b13853ebd004", "brand": "Ford", "model": "Endeavour", "seating_capacity": 7, "price_per_day": 90, "car_type": "SUV", "fuel_type": "Diesel", "fuel_average": 12, "availability": True }
+{ "car_id": "3ac92c77-105a-4ef2-a501-e94ff6c0e4b1", "brand": "Tesla", "model": "Model 3", "seating_capacity": 5, "price_per_day": 120, "car_type": "Electric", "fuel_type": "Electric", "fuel_average": 450, "availability": False }

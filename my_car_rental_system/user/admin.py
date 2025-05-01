@@ -1,4 +1,4 @@
-from user.user import User
+from user import User
 from file_handler.file_handler import FileHandler
 import uuid
 
