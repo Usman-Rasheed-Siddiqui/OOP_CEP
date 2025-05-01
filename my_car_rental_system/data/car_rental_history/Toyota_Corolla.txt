@@ -1,0 +1,4 @@
+Renting Date
+Return Date
+Days
+Total Cost

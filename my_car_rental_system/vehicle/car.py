@@ -20,6 +20,7 @@ class Car(Vehicle):
         self.car_type = car_type
 
 
+
     def display_vehicle_info(self):
         file_handler = FileHandler()
         data = file_handler.load_from_file("cars.txt")
@@ -55,6 +56,3 @@ Availability : {"Available" if car["availability"] else "Not Available"}
                 print("Car with this ID not available.")
             except KeyError as e:
                 raise ValueError("Data format error:",e)
-
-C1 = Car()
-C1.display_vehicle_info()

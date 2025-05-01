@@ -1,0 +1,1 @@
+{'name': 'Usman Siddiqui', 'password': 'usman123', 'address': 'House No. R5', 'balance': 35000, 'rented car': 0, 'recent rent': None}

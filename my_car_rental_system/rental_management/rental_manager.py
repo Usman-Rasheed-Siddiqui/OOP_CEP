@@ -1,53 +1,65 @@
 from datetime import datetime
-from rental import Rental
-from vehicle.car import Car
-from user.customer import Customer
 from file_handler.file_handler import FileHandler
 
-class RentalManager(Rental):
-    def __init__(self, days, car: Car, customer: Customer):
-        super().__init__(days, car, customer)
-        self.total_cost = self.days * self.car.price_per_day
+class RentalManager:
+    def __init__(self, brand="", model=""):
+
+        self.brand = brand
+        self.model = model
+        self.rental_date = datetime.now()
+        self.return_date = None
+        self.days = int(input("Enter the number of days: "))
+
+        self.final_cost = None
         self.file_handler = FileHandler()
 
         self.available_cars =self.file_handler.load_from_file("available_cars.txt")
         self.rented_cars = self.file_handler.load_from_file("rented_cars.txt")
-        self.rental_history = self.file_handler.load_from_file(f"car_rental_history/{self.car.brand}_{self.car.model}.txt")
 
 
     def save_rental_history(self):
         """For saving a vehicle's rental history"""
+        for car in self.available_cars:
+            if car["brand"] == self.brand and car["model"] == self.model:
+                self.expected_cost = self.days * car.price_per_day
+
         history = {
             "Renting Date": {self.rental_date},
             "Return Date": {self.return_date},
             "Days": {self.days},
-            "Total Cost": {self.total_cost},
-        }                           # Needs attributes from Rentals
-        self.rental_history.append(history)
+            "Total Cost": {self.final_cost},
+        }
+        #self.rental_history.append(history)
+        self.file_handler.save_to_file(history,f"car_rental_history/{self.brand}_{self.model}.txt")
         return history
+
 
     def print_rental_history(self):
         """Printing the rental history"""
-        for num,rents in enumerate(self.rental_history):
+        rental_history = self.file_handler.load_from_file(f"car_rental_history/{self.brand}_{self.model}.txt")
+        for num,rents in zip(range(1, len(rental_history)+1),rental_history):
             print(f"{num}.",end=" ")
             for att, specification in rents.items():
                 print(f"{att} : {rents}", end =" | ")
+            print()
 
-
-    def display_user_info(self):
-        pass
-
-    def process_rental(self):
+    def process_rental(self, customer):
+        for car in self.available_cars:
+            if car["brand"] == self.brand and car["model"] == self.model:
+                self.expected_cost = self.days * car.price_per_day
+                self.car_id = car["car_id"]
 
         rental = {
-            "car_id": {self.car.car_id},
-            "customer": {self.customer.name},
-            "car": {self.vehicle},
+            "car_id": {self.car_id},
+            "customer": {customer},
+            "brand": {self.brand},
+            "model": {self.model},
             "rental_data": {self.rental_date},
             "return_date": {self.return_date},
-            "expected_days": {self.days},
-            "expected_cost": {self.expected_cost},
+            "total_days": {self.days},
+            "total_cost": {self.expected_cost},
         }
+
         for car in self.rented_cars:
             if car["car_id"] != rental["car_id"]:
                 self.rented_cars.append(car)
@@ -61,16 +73,23 @@ class RentalManager(Rental):
 
         return rental
 
-    def process_return(self):
+    def process_return(self, car_id, customer):
 
+        self.return_date = datetime.now()
         self.days = self.return_date - self.rental_date
+        for car in self.available_cars:
+            if car["car_id"] == car_id:
+                self.total_cost = self.days * car.price_per_day
+                self.rental_date = car["rental_date"]
+                self.car_id = car["car_id"]
 
         giveaway = {
-            "car_id": {self.car.car_id},
-            "customer": {self.customer.name},
-            "car": {self.vehicle},
+            "car_id": {car_id},
+            "customer": {customer},
+            "brand": {self.brand},
+            "model": {self.model},
             "rental_data": {self.rental_date},
-            "return_date": datetime.now(),
+            "return_date": {self.return_date},
             "total_days": {self.days},
             "total_cost": {self.total_cost},
         }
@@ -88,3 +107,20 @@ class RentalManager(Rental):
 
         return giveaway
 
+    def print_receipt(self, first_name, last_name):
+        return f"""
+{"="*30}
+    RECEIPT
+{"="*30}
+Customer Name : {first_name} {last_name}
+Car ID: {self.car_id}
+Car : {self.brand} {self.model}
+Rental Date : {self.rental_date}
+Expected Days : {self.days}
+{"="*30}
+Expected Cost: {self.expected_cost}
+{"="*30}
+"""
+
+rental_manager = RentalManager("Toyota", "Corolla")
+rental_manager.save_rental_history()
