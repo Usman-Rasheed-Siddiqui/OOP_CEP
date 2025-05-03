@@ -1,1 +1,0 @@
-{'car_id': '', 'customer': 'Usman Siddiqui', 'brand': 'Toyota', 'model': 'Corolla', 'rental_data': '2025-05-03 01:06:38.592337', 'return_date': 'None', 'total_days': 12, 'total_cost': 0}

@@ -6,7 +6,7 @@ class Vehicle(ABC, FileHandler):
     """A class which sets the root for all the cars in the rental system. It is an abstract class.
     Attributes: car_id, brand, model, seating_capacity, price_per_day, availability
     Methods: display_vehicle_info() {abstract method}, display_all_vehicles()"""
-    def __init__(self, brand="", model="", seating_capacity="", price_per_day="", availability=True):
+    def __init__(self, brand="", model="", seating_capacity="", availability=True, price_per_day=0):
         self.car_id = uuid.uuid4()
         self.brand = brand
         self.model = model

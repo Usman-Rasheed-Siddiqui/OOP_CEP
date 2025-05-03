@@ -33,8 +33,8 @@ class Customer(User):
             "address": self.address,
             "balance": self.balance,
             "rented car" : self.rented_cars,
-            "recent rent": None,
         }
+
         self.user_rental_history.append(new_user)
         self.file_handler.save_to_file(self.user_rental_history,"users.txt")
         print("Your account was successfully created!")
@@ -74,6 +74,8 @@ Balance : {user["balance"]}
                     }
                     self.rented_cars = 1
                     self.user_rental_history.append(renting)
+                    break
+
             except ValueError:
                 print("No such car with this brand and model found")
 

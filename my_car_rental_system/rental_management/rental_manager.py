@@ -1,24 +1,16 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from file_handler.file_handler import FileHandler
 
 class RentalManager:
     def __init__(self, brand="", model="", car_id="", expected_cost=0):
-
         self.brand = brand
         self.model = model
         self.car_id = car_id
         self.rental_date = None
         self.return_date = None
-        self.days = int(input("Enter the number of days: "))
+        self.days = 0
         self.expected_cost = expected_cost
         self.final_cost = None
-        self.file_handler = FileHandler()
-
-        self.available_cars =self.file_handler.load_from_file("available_cars.txt")
-        self.rented_cars = self.file_handler.load_from_file("rented_cars.txt")
-
-
-
 
     # def save_rental_history(self):
     #     """For saving a vehicle's rental history"""
@@ -32,7 +24,6 @@ class RentalManager:
     #         "Days": {self.days},
     #         "Total Cost": {self.final_cost},
     #     }
-    #
     #
     #     self.file_handler.save_to_file(history,f"car_rental_history/{self.brand}_{self.model}.txt")
     #     return history
@@ -48,80 +39,133 @@ class RentalManager:
     #         print()
 
     def process_rental(self, customer):
-        for car in self.available_cars:
+
+        file_handler = FileHandler()
+        cars = file_handler.load_from_file("cars.txt")
+
+        not_available_cars = [car for car in cars if car["availability"] == False]
+        cars = [car for car in cars if car["availability"] == True]
+        rented_cars = file_handler.load_from_file("rented_cars.txt")
+        available_cars = file_handler.load_from_file("available_cars.txt")
+        car_found = False
+        self.days = int(input("Enter the number of days to rent the car: "))
+
+        for car in cars:
             if car["brand"] == self.brand and car["model"] == self.model:
-                self.expected_cost = self.days * int(car["price_per_day"])
+                self.total_cost = self.days * car["price_per_day"]
                 self.car_id = car["car_id"]
+                car_found = True
                 break
 
-        self.rental_date = datetime.now()
+        if not car_found:
+            raise ValueError("Car with this id is not available")
+
+        self.rental_date = datetime.now().date()
+        self.return_date = self.rental_date + timedelta(days=self.days)
 
         rental = {
-            "car_id": self.car_id,
-            "customer": customer,
-            "brand": self.brand,
-            "model": self.model,
-            "rental_data": str(self.rental_date),
-            "return_date": str(self.return_date),
-            "total_days": self.days,
-            "total_cost": self.expected_cost,
+        "car_id": self.car_id,
+        "customer": customer,
+        "brand": self.brand,
+        "model": self.model,
+        "rental_date": str(self.rental_date),
+        "return_date": str(self.return_date),
+        "total_days": self.days,
+        "total_cost": self.total_cost,
         }
 
-        self.rented_cars.append(rental)
 
-        for car in self.available_cars:
-            if car["car_id"] == rental["car_id"]:
-                self.available_cars.remove(car)
+        rented_cars.append(rental)
+
+        for car in available_cars:
+            if car["car_id"] == self.car_id:
+                available_cars.remove(car)
                 break
 
-        self.file_handler.save_to_file(self.available_cars, "available_cars.txt")
-        self.file_handler.save_to_file(self.rented_cars, "rented_cars.txt")
+        for car in cars:
+            if car["car_id"] == self.car_id:
+                car["availability"] = False
+                break
 
+        all_cars = cars + not_available_cars
+
+        file_handler.save_to_file(all_cars, "cars.txt")
+        file_handler.save_to_file(rented_cars, "rented_cars.txt")
+        file_handler.save_to_file(available_cars, "available_cars.txt")
         return rental
 
     def process_return(self, car_id, customer):
 
-        self.return_date = datetime.now()
-        self.days = self.return_date - self.rental_date
+        file_handler = FileHandler()
+        rented_cars = file_handler.load_from_file("rented_cars.txt")
+        available_cars = file_handler.load_from_file("available_cars.txt")
+        cars = file_handler.load_from_file("cars.txt")
+
+        for car in rented_cars:
+            if car["car_id"] == car_id and car["customer"] == customer:
+
+                self.days = car["total_days"]
+                self.return_date = datetime.strptime(car["return_date"], "%Y-%m-%d").date()
+                self.brand = car["brand"]
+                self.model = car["model"]
+
+
+                actual_date = datetime.now().date()
+
+                if actual_date <= self.return_date:
+                    self.total_cost = car["total_cost"]
+                else:
+                    extra = 10
+                    actual_days = (actual_date - self.return_date).days
+                    days_difference = actual_days - self.days
+                    penalty = extra * days_difference
+                    self.total_cost += penalty
+
+                    print("You have used the car more than the rental date")
+                    print("decided. We will charge extra amount.")
+                    print(f"You have to pay {penalty} PKR more.")
+                    print(f"Total amount is now: {self.total_cost}")
 
         giveaway = {
-            "car_id": {car_id},
-            "customer": {customer},
-            "brand": {self.brand},
-            "model": {self.model},
-            "rental_data": {self.rental_date},
-            "return_date": {self.return_date},
-            "total_days": {self.days},
-            "total_cost": {self.total_cost},
+            "car_id": car_id,
+            "customer": None,
+            "brand": self.brand,
+            "model": self.model,
+            "rental_data": None,
+            "return_date": None,
+            "total_days": 0,
+            "total_cost": 0,
         }
 
-        for car in self.available_cars:
-            if car["car_id"] != giveaway["car_id"]:
-                self.available_cars.append(car)
+        available_cars.append(giveaway)
 
-        for car in self.rented_cars:
+        for car in cars:
             if car["car_id"] == giveaway["car_id"]:
-                self.rented_cars.remove(car)
+                car["availability"] = True
+                break
 
-        self.file_handler.save_to_file(self.available_cars, "available_cars.txt")
-        self.file_handler.save_to_file(self.rented_cars, "rented_cars.txt")
+        for car in rented_cars:
+            if car["car_id"] == giveaway["car_id"]:
+                rented_cars.remove(car)
+
+        file_handler.save_to_file(available_cars, "available_cars.txt")
+        file_handler.save_to_file(rented_cars, "rented_cars.txt")
+        file_handler.save_to_file(cars, "cars.txt")
 
         return giveaway
 
-    def print_receipt(self, first_name, last_name):
+
+    def print_receipt(self, customer):
         return f"""
-{"="*30}
-    RECEIPT
-{"="*30}
-Customer Name : {first_name} {last_name}
-Car ID: {self.car_id}
+{"="*38}
+            RECEIPT
+{"="*38}
+Customer Name : {customer}
+Car ID: {self.car_id}   (Note: Please take a screenshot of receipt to remember the Car ID when returning)
 Car : {self.brand} {self.model}
 Rental Date : {self.rental_date}
-Expected Days : {self.days}
+Total Days : {self.days}
 {"="*30}
-Expected Cost: {self.expected_cost}
-{"="*30}
+Total Cost: {self.total_cost}
+{"="*38}
 """
-
-rental_manager = RentalManager("Toyota", "Corolla")
-rental_manager.process_rental("Usman Siddiqui")
