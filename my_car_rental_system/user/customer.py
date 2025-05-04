@@ -2,6 +2,7 @@ from user import User
 from rental_management.rental_manager import RentalManager
 from datetime import datetime
 from file_handler.file_handler import FileHandler
+from exception_handling.Exceptions import AlreadyRentedError
 
 class Customer(User):
     def __init__(self, first_name="", last_name="", password="", address="", balance=""):
@@ -10,44 +11,61 @@ class Customer(User):
         self.balance = balance
         self.file_handler = FileHandler()
         self.name = self.first_name+" "+last_name
-        self.user_rental_history = self.file_handler.load_from_file("users.txt")
+        self.all_users = self.file_handler.load_from_file("users.txt")
         self.rented_cars = 0
-
-    def check_rent(self):
-        if self.rented_cars == 1:
-            print("You cannot rent a car. You have already a car rented")
 
     def create_an_account(self):
 
-        self.first_name = input("Enter your first name: ")
-        self.last_name = input("Enter your last name: ")
-        self.password = input("Enter your password: ")
-        self.address = input("Enter your address: ")
-        self.balance = int(input("Enter your balance: "))
-        self.rented_cars = 0
-        self.name = self.first_name+" "+self.last_name
+        file_handler = FileHandler()
+        all_users = file_handler.load_from_file("users.txt")
 
-        new_user = {
-            "name": self.name,
-            "password": self.password,
-            "address": self.address,
-            "balance": self.balance,
-            "rented car" : self.rented_cars,
-        }
+        while True:
+            try:
+                self.first_name = input("Enter your first name: ")
+                if not self.first_name:
+                    raise ValueError("First Name field are required")
+                self.last_name = input("Enter your last name: ")
+                if not self.last_name:
+                    raise ValueError("Last Name field are required")
+                self.password = input("Enter your password: ")
+                if not self.password:
+                    raise ValueError("Password field are required")
+                self.address = input("Enter your address: ")
+                if not self.address:
+                    raise ValueError("Address field are required")
+                self.balance = input("Enter your balance: ")
+                if not self.balance.isdigit():
+                    raise ValueError("Balance must be an integer")
 
-        self.user_rental_history.append(new_user)
-        self.file_handler.save_to_file(self.user_rental_history,"users.txt")
-        print("Your account was successfully created!")
-        return new_user
+                self.balance = int(self.balance)
+                self.rented_cars = 0
+                self.name = self.first_name + " " + self.last_name
+
+                new_user = {
+                    "name": self.name,
+                    "password": self.password,
+                    "address": self.address,
+                    "balance": self.balance,
+                    "rented_car" : self.rented_cars,
+                }
+
+                all_users.append(new_user)
+                file_handler.create_file("users", self.name)
+                file_handler.save_to_file(all_users,"users.txt")
+                print("Your account was successfully created!")
+                print("Please login to your account to access it.")
+                break
+
+            except ValueError as e:
+                print(f"Invalid entry: {e}")
 
     def display_user_info(self):
-        data = self.user_rental_history
-        for user in data:
+        for user in self.all_users:
             try:
                 if user["name"] == self.name:
                     print (f"""
 {"="*30}
-USER INFORMATION
+      USER INFORMATION
 {"="*30}
 Name : {user["name"]}
 Address : {user["address"]}
@@ -57,27 +75,50 @@ Balance : {user["balance"]}
             except:
                 raise ValueError("An Error occurred. Please try again")
 
-    def renting(self, brand, model, customer):
-        cars = self.file_handler.load_from_file("cars.txt")
-        for car in cars:
-            try:
-                if car["brand"] == brand and car["model"] == model:
-                    rental_manager = RentalManager(brand, model)
-                    rental_manager.process_rental(customer)
-                    renting = {
-            "car_id" : car["car_id"],
-            "brand" : brand,
-            "model" : model,
-            "days" : rental_manager.days,
-            "rental_date" : rental_manager.rental_date,
-            "cost" : rental_manager.total_cost,
-                    }
-                    self.rented_cars = 1
-                    self.user_rental_history.append(renting)
-                    break
 
-            except ValueError:
-                print("No such car with this brand and model found")
+    def check_rent(self, rented_car):
+        if rented_car == 1:
+            raise AlreadyRentedError("You already have a car rented")
+
+    def renting(self, brand, model, customer):
+        file_handler = FileHandler()
+
+        users = file_handler.load_from_file("users.txt")
+        try:
+            for user in users:
+                if user["name"] == customer:
+                    self.check_rent(user["rented_car"])
+
+        except AlreadyRentedError as e:
+            print(f"Error: {e}")
+            return
+
+        safe_name = customer.replace(" ", "_")
+        user_rental_history = file_handler.load_from_file(f"users/{safe_name}.txt")
+
+        rental_manager = RentalManager(brand, model)
+        car = rental_manager.process_rental(customer)
+        if not car:
+            return
+
+        rent = {
+                "car_id" : car["car_id"],
+                "brand" : car["brand"],
+                "model" : car["model"],
+                "days" : rental_manager.days,
+                "rental_date" : rental_manager.rental_date.strftime("%Y-%m-%d"),
+                "return_date" : rental_manager.return_date.strftime("%Y-%m-%d"),
+                "total_cost" : rental_manager.total_cost,
+                }
+
+        for user in users:
+            if user["name"] == customer:
+                user["rented_car"] = 1
+
+                user_rental_history.append(rent)
+                file_handler.save_to_file(users, "users.txt")
+                file_handler.save_to_file(user_rental_history, f"users/{safe_name}.txt")
+                break
 
     def returning(self, car_id):
 
@@ -139,9 +180,6 @@ Balance : {user["balance"]}
         return menu
 
 name = input("Enter your name: ")
-password = input("Enter your password: ")
 
 user = Customer()
-user.password_check(name, password, "", "")
 user.renting("Toyota", "Corolla", name)
-user.save_user_info("2c026418-6111-4d4a-a91b-dffd2626ec7b")

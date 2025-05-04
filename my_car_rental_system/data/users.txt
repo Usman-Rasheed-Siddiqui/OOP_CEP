@@ -1,1 +1,4 @@
-{'name': 'Usman Siddiqui', 'password': 'usman123', 'address': 'House No. R5', 'balance': 35000, 'rented car': 0}
+{'name': 'Miles Morales', 'password': 'miles123', 'address': 'New York Street 6', 'balance': 30000, 'rented_car': 0}
+{'name': 'Huzaifa Hanif', 'password': 'huzaifa123', 'address': 'Nazimabad', 'balance': 50000, 'rented_car': 1}
+{'name': 'Abdur Rehman', 'password': 'ar123', 'address': 'Nazimabad', 'balance': 60000, 'rented_car': 0}
+{'name': 'Usman Siddiqui', 'password': 'usman123', 'address': 'House R5', 'balance': 40000, 'rented_car': 1}

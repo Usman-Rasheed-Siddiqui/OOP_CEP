@@ -1,2 +1,2 @@
-{'car_id': 'c9e4ed72-f71f-48d7-b79e-b13853ebd004', 'customer': None, 'brand': 'Ford', 'model': 'Endeavour', 'rental_data': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}
 {'car_id': '2c026418-6111-4d4a-a91b-dffd2626ec7b', 'customer': None, 'brand': 'Toyota', 'model': 'Corolla', 'rental_data': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}
+{'car_id': '3ac92c77-105a-4ef2-a501-e94ff6c0e4b1', 'customer': None, 'brand': 'Tesla', 'model': 'Model 3', 'rental_data': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}

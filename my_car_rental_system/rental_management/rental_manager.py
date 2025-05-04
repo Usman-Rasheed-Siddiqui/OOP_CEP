@@ -1,5 +1,6 @@
 from datetime import datetime, timedelta
 from file_handler.file_handler import FileHandler
+from exception_handling.Exceptions import CarNotAvailableError
 
 class RentalManager:
     def __init__(self, brand="", model="", car_id="", expected_cost=0):
@@ -10,7 +11,7 @@ class RentalManager:
         self.return_date = None
         self.days = 0
         self.expected_cost = expected_cost
-        self.final_cost = None
+        self.total_cost = 0
 
     # def save_rental_history(self):
     #     """For saving a vehicle's rental history"""
@@ -39,26 +40,31 @@ class RentalManager:
     #         print()
 
     def process_rental(self, customer):
-
         file_handler = FileHandler()
         cars = file_handler.load_from_file("cars.txt")
+        found = False
 
         not_available_cars = [car for car in cars if car["availability"] == False]
         cars = [car for car in cars if car["availability"] == True]
         rented_cars = file_handler.load_from_file("rented_cars.txt")
         available_cars = file_handler.load_from_file("available_cars.txt")
-        car_found = False
-        self.days = int(input("Enter the number of days to rent the car: "))
 
-        for car in cars:
-            if car["brand"] == self.brand and car["model"] == self.model:
-                self.total_cost = self.days * car["price_per_day"]
-                self.car_id = car["car_id"]
-                car_found = True
-                break
+        try:
+            for car in cars:
+                if car["brand"].lower() == self.brand.lower() and car["model"].lower() == self.model.lower():
+                    self.days = int(input("Enter the number of days to rent the car: "))
+                    self.brand = car["brand"]
+                    self.model = car["model"]
+                    found = True
+                    self.total_cost = self.days * car["price_per_day"]
+                    self.car_id = car["car_id"]
+                    break
+            if not found:
+                raise CarNotAvailableError
 
-        if not car_found:
-            raise ValueError("Car with this id is not available")
+        except CarNotAvailableError as e:
+            print(f"Error: {e}")
+            return
 
         self.rental_date = datetime.now().date()
         self.return_date = self.rental_date + timedelta(days=self.days)
@@ -102,7 +108,7 @@ class RentalManager:
         cars = file_handler.load_from_file("cars.txt")
 
         for car in rented_cars:
-            if car["car_id"] == car_id and car["customer"] == customer:
+            if car["car_id"] == car_id and car["customer"].lower() == customer.lower():
 
                 self.days = car["total_days"]
                 self.return_date = datetime.strptime(car["return_date"], "%Y-%m-%d").date()
