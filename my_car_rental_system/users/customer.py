@@ -1,12 +1,12 @@
-from user import User
+from .basic_user import User
 from rental_management.rental_manager import RentalManager
 from file_handler.file_handler import FileHandler
 from exception_handling.Exceptions import AlreadyRentedError, AccountNotFoundError, WrongPasswordError
 
 
 class Customer(User):
-    def __init__(self, first_name, last_name, address="", balance=""):
-        super().__init__(first_name, last_name)
+    def __init__(self, first_name="", last_name="", password="", address="", balance=""):
+        super().__init__(first_name, last_name, password)
         self.address = address
         self.balance = balance
         self.file_handler = FileHandler()
@@ -15,34 +15,41 @@ class Customer(User):
 
     def login(self):
         super().login()
-        self.password_check(self.name.strip(), self.password)
+        return self.password_check(self.name.strip(), self.password)
 
-    def password_check(self, name, password, page=None, menu=None):
+    def password_check(self, name, password):
         attempts = 3
         file_handler = FileHandler()
         users = file_handler.load_from_file("users.txt")
 
         while attempts > 0:
+            user_found = False
+            password_match = False
             try:
                 for user in users:
                     if user["name"].lower() == name.lower():
-                        if user["password"] == password:
-                            print("Password match!")
-                            print(f"Welcome onboard! Mr./Mrs. {name}")
-                            return page
-                        else:
-                            attempts -= 1
-                            print(f"Password or User name mismatch. You have {attempts} left")
-                            if attempts == 0:
-                                raise WrongPasswordError
+                        user_found = True
+                    if user["password"] == password:
+                        password_match = True
 
-                            print("Try again!")
-                            name = input("Enter your name: ")
-                            password = input("Enter your password: ")
+                if user_found and password_match:
+                    print("Username and Password match!")
+                    print(f"Welcome onboard! Mr./Mrs. {name}")
+                    return True
+                else:
+                    attempts -= 1
+                    if attempts > 0:
+                        print(f"Password or User name mismatch. You have {attempts} left")
+                        name = input("Enter your name: ")
+                        password = input("Enter your password: ")
+
+                    if attempts == 0:
+                        raise WrongPasswordError
+
             except WrongPasswordError as e:
                 print(f"Error: {e}")
 
-        return menu
+        return False
 
     def create_an_account(self):
 
@@ -120,7 +127,11 @@ class Customer(User):
             raise AlreadyRentedError("You already have a car rented")
 
 
-    def renting(self, brand, model, customer):
+    def renting(self):
+        brand = input("Enter brand you want to rent: ")
+        model = input("Enter model you want to rent: ")
+        customer = self.name
+
         file_handler = FileHandler()
         users = file_handler.load_from_file("users.txt")
         user_found = False
@@ -157,19 +168,27 @@ class Customer(User):
                 "return_date" : rental_manager.return_date.strftime("%Y-%m-%d"),
                 "total_cost" : rental_manager.total_cost,
                 }
+        try:
+            for user in users:
+                if user["name"] == customer:
+                    if user["balance"] < rental_manager.total_cost:
+                       raise Exception("You don't have enough money to rent this car. Please update your balance and try again.")
 
-        for user in users:
-            if user["name"] == customer:
-                user["rented_car"] = 1
-                user["balance"] -= rental_manager.total_cost
+                    user["balance"] -= rental_manager.total_cost
+                    user["rented_car"] = 1
 
-                user_rental_history.append(rent)
-                file_handler.save_to_file(users, "users.txt")
-                file_handler.save_to_file(user_rental_history, f"users/{safe_name}.txt")
-                break
+                    user_rental_history.append(rent)
+                    file_handler.save_to_file(users, "users.txt")
+                    file_handler.save_to_file(user_rental_history, f"users/{safe_name}.txt")
+                    rental_manager.print_receipt(self.name)
+                    break
+        except Exception as e:
+            print(f"Error: {e}")
 
-    def returning(self, car_id):
 
+    def returning(self):
+
+        car_id = input("Enter car id: ")
         rental_manager = RentalManager()
         car = rental_manager.process_return(car_id, self.name)
         if not car:
@@ -223,7 +242,3 @@ Balance : {user["balance"]}
             except ValueError:
                 print("An Error occurred. Please try again")
 
-
-
-C1 = Customer("Usman", "Siddiqui")
-C1.write_feedback()

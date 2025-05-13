@@ -1,5 +1,6 @@
-from vehicle import Vehicle
+from .vehicle import Vehicle
 from file_handler.file_handler import FileHandler
+from exception_handling.Exceptions import CarNotAvailableError
 
 class Car(Vehicle):
     """A car which sets information for a specific vehicle. It is the child class of 'Vehicle'.
@@ -26,33 +27,49 @@ class Car(Vehicle):
         data = file_handler.load_from_file("cars.txt")
 
         while True:
-            i_d = input("Enter the car id (type e to quit): ")
-            if i_d == "e":
-                break
-
-            elif len(i_d) != 36:
-                print("Invalid car id. Enter a valid car id. (36 characters)")
-                continue
-
             try:
-                for car in data:
-                    if car["car_id"] == i_d and car["availability"]:
-                        print(f"""
-{"="*45}    
-             CAR INFORMATION
-{"="*45}
-Car ID : {car["car_id"]}
-Car : {car["brand"]} {car["model"]}
-Car Type: {car["car_type"]}
-{"="*45}
-Seating Capacity : {car["seating_capacity"]}
-Price/Day : {car["price_per_day"]} PKR
-Fuel Type : {car["fuel_type"]}
-Fuel Average : {car["fuel_average"]}
-Availability : {"Available" if car["availability"] else "Not Available"}
-{"="*45}
-""")
+                print("Enter q/Q to exit ")
+                brand = input("Brand name (example: Toyota): ").strip()
+                if brand == "q" or brand == "Q":
+                    return
+                model = input("Model name (example: Corolla): ").strip()
+                if model == "q" or model == "Q":
+                    return
+                if not brand or not model:
+                    raise TypeError("Brand or model not found.")
 
-                print("Car with this ID not available.")
-            except KeyError as e:
-                raise ValueError("Data format error:",e)
+                car_found = False
+                count = 0
+                for car in data:
+                    if car["brand"].lower() == brand.lower() and car["model"].lower() == model.lower() and car["availability"] == True:
+                        count += 1
+                        car_found = True
+                        brand = car["brand"]
+                        model = car["model"]
+                        type = car["car_type"]
+                        price_per_day = car["price_per_day"]
+                        seating_capacity = car["seating_capacity"]
+                        fuel_type = car["fuel_type"]
+                        fuel_average = car["fuel_average"]
+                if not car_found:
+                    raise CarNotAvailableError
+
+                print(f"""
+{"=" * 25}    
+    CAR INFORMATION
+{"=" * 25}
+Car : {brand} {model}
+Car Type: {type}
+{"=" * 25}
+Seating Capacity : {seating_capacity}
+Price/Day : {price_per_day} PKR
+Fuel Type : {fuel_type}
+Fuel Average : {fuel_average}
+Available Cars : {count}
+{"=" * 25}""")
+                return True
+
+            except CarNotAvailableError as e:
+                print("Error:",e)
+
+

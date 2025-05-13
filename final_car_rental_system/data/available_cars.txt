@@ -1,0 +1,1 @@
+{'car_id': 'bcf624d2-f258-4e83-ba84-617f25210bc4', 'customer': None, 'brand': 'Toyota', 'model': 'Corolla', 'rental_data': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}

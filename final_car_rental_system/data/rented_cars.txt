@@ -1,4 +1,3 @@
 {'car_id': '2c026418-6111-4d4a-a91b-dffd2626ec7b', 'customer': 'Huzaifa Hanif', 'brand': 'Toyota', 'model': 'Corolla', 'rental_date': '2025-05-05', 'return_date': '2025-05-17', 'total_days': 12, 'total_cost': 660}
 {'car_id': '3ac92c77-105a-4ef2-a501-e94ff6c0e4b1', 'customer': 'Abdur Rehman', 'brand': 'Tesla', 'model': 'Model 3', 'rental_date': '2025-05-05', 'return_date': '2025-05-11', 'total_days': 6, 'total_cost': 720}
 {'car_id': 'c9e4ed72-f71f-48d7-b79e-b13853ebd004', 'customer': 'Ayesha Affan Siddiqui', 'brand': 'Ford', 'model': 'Endeavour', 'rental_date': '2025-05-06', 'return_date': '2025-05-18', 'total_days': 12, 'total_cost': 1080}
-{'car_id': 'bcf624d2-f258-4e83-ba84-617f25210bc4', 'customer': 'Usman Siddiqui', 'brand': 'Toyota', 'model': 'Corolla', 'rental_date': '2025-05-12', 'return_date': '2025-07-01', 'total_days': 50, 'total_cost': 2750}

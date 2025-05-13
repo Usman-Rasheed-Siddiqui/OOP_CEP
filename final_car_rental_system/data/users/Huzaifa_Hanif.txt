@@ -1,0 +1,1 @@
+{'car_id': 'c9e4ed72-f71f-48d7-b79e-b13853ebd004', 'brand': 'Ford', 'model': 'Endeavour', 'days': 45, 'rental_date': 2016, 'return_date': 2011, 'total_cost': 4050}

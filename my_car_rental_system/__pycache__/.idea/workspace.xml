@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="abe28f5d-a4df-4fc1-b5b3-cfbc40177493" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../__init__.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../users/basic_user.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../exception_handling/Exceptions.py" beforeDir="false" afterPath="$PROJECT_DIR$/../exception_handling/Exceptions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../users/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/../users/admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user/customer.py" beforeDir="false" afterPath="$PROJECT_DIR$/../users/customer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user/testing.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../user/user.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../vehicle/car.py" beforeDir="false" afterPath="$PROJECT_DIR$/../vehicle/car.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectColorInfo"><![CDATA[{
+  "associatedIndex": 4
+}]]></component>
+  <component name="ProjectId" id="2x0JXd3QvXmnkGKXiLyJZed3lgN" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "E:/NED University/Github/OOP_CEP/my_car_rental_system/__pycache__",
+    "nodejs_package_manager_path": "npm",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-PY-251.23774.444" />
+        <option value="bundled-python-sdk-890ed5b35930-d9c5bdb153f4-com.jetbrains.pycharm.pro.sharedIndexes.bundled-PY-251.23774.444" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="abe28f5d-a4df-4fc1-b5b3-cfbc40177493" name="Changes" comment="" />
+      <created>1747069097660</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1747069097660</updated>
+      <workItem from="1747069098801" duration="17000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

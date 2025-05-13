@@ -1,6 +1,6 @@
-from user import User
+from .basic_user import User
 from file_handler.file_handler import FileHandler
-from exception_handling.Exceptions import WrongPasswordError
+from exception_handling.Exceptions import WrongPasswordError, PasswordError
 import uuid
 
 
@@ -8,21 +8,35 @@ class Admin(User):
     def __init__(self, password=""):
         super().__init__(password)
         self.file_handler = FileHandler()
+        self.admin_info = self.file_handler.load_from_file("admin_info.txt")
 
     def login(self):
         super().login()
         self.check_admin_password(self.name.strip(), self.password)
 
-    def check_admin_password(self, name, password, dashboard=None, menu=None):
+    def modify_admin_info(self):
+        while True:
+            try:
+                self.password = input("Enter new password for admin (8+ characters): ")
+                valid = self.validate_new_password(self.password)
+                if valid:
+                    self.admin_info[0]["password"] = self.password
+                    print("Password changed successfully")
+                    self.file_handler.save_to_file(self.admin_info, "admin_info.txt")
+                    break
+            except PasswordError as e:
+                print("Error:", e)
+
+    def check_admin_password(self, name, password):
         attempts = 3
 
         while attempts > 0:
             try:
-                    if name.lower() == "admin":
-                        if password == "admin@123":
+                    if name.lower() == self.admin_info["name"].lower():
+                        if password == self.admin_info["password"]:
                             print("Password match!")
                             print(f"Welcome onboard! Mr.{name}")
-                            return dashboard
+                            return True
                         else:
                             attempts -= 1
                             print(f"Password or name mismatch. You have {attempts} left")
@@ -35,7 +49,7 @@ class Admin(User):
             except WrongPasswordError as e:
                 print(f"Error: {e}")
 
-        return menu
+        return False
 
     def display_user_info(self):
         users = self.file_handler.load_from_file("users.txt")
@@ -93,7 +107,7 @@ class Admin(User):
         self.file_handler.save_to_file(available_cars,"available_cars.txt")
         return new_car
 
-    def  remove_car(self, brand, model):
+    def remove_car(self, brand, model):
         available_cars = self.file_handler.load_from_file("available_cars.txt")
         for car in available_cars:
             if car["brand"] == brand and car["model"] == model:
