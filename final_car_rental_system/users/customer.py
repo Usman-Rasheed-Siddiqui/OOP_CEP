@@ -1,3 +1,4 @@
+import users
 from .basic_user import User
 from rental_management.rental_manager import RentalManager
 from file_handler.file_handler import FileHandler
@@ -119,6 +120,10 @@ class Customer(User):
 
                 if not self.address:
                     raise ValueError("Address field are required")
+
+                if self.address.isdigit():
+                    raise Exception("Address can't be just an integer")
+
                 break
             except ValueError as e:
                 print("Invalid Entry:",e)
@@ -302,7 +307,7 @@ Balance : {user["balance"]}
                 time.sleep(0.5)
                 return
 
-#------------------------------------------------BALANCE UPDATE--------------------------------------------
+#------------------------------------------------INFORMATION UPDATE--------------------------------------------
 
     def update_balance(self):
 
@@ -318,7 +323,7 @@ Balance : {user["balance"]}
                     if user["name"].lower() == self.name.lower():
                         balance = input("Enter your balance to be updated: ")
 
-                        if self.quit_choice(self.first_name):
+                        if self.quit_choice(balance):
                             return False
 
                         if not balance.isdigit():
@@ -347,6 +352,85 @@ Balance : {user["balance"]}
                 print(f"Error: {e}")
             except OverflowError as e:
                 print(f"Error: {e}")
+
+    def update_info(self):
+        print("=" * 30)
+        print("UPDATE INFORMATION")
+        print("=" * 30)
+        users = self.all_users
+
+        print("Press q/Q at any time to quit")
+        print("If you don't want to change something, just press enter. Please do")
+        print("fill it out with any input")
+        while True:
+            try:
+                for user in users:
+                    if self.name.lower() == user["name"].lower():
+                        password = input("Enter your password: ")
+                        if password != "":
+                            self.validate_new_password(password)
+                            user["password"] = password
+                        else:
+                            password = user["password"]
+                            user["password"] = password
+
+                        address = input("Enter your address: ")
+                        if address != "":
+                            user["address"] = address
+                        else:
+                            address = user["address"]
+                            user["address"] = address
+
+                        if address.isdigit():
+                            raise Exception("Address can't be just an integer")
+
+                self.file_handler.save_to_file(users, "users.txt")
+                print("Updated your information....")
+                time.sleep(0.5)
+                print("Saving your information....")
+                time.sleep(0.5)
+                print("Information updated successfully!")
+                time.sleep(0.5)
+                print("Returning back to user menu.....")
+                time.sleep(0.5)
+                return
+
+            except PasswordError as e:
+                print(f"Error: {e}")
+
+#---------------------------------------FEEDBACK-----------------------------------------------------------
+
+    def write_feedback(self):
+        feedbacks = self.file_handler.load_from_file("feedbacks.txt")
+        print("=" * 30)
+        print("FEEDBACK")
+        print("=" * 30)
+        print()
+        print("We love to hear from you. Write your valuable feedback here please:")
+        while True:
+            try:
+                feedback = input("Feedback: ")
+                if not feedback:
+                    raise Exception("Feedback cannot be empty")
+                break
+            except Exception as e:
+                print(f"Error: {e}")
+
+        feedback = {
+            "Name" : self.name,
+            "Feedback" : feedback,
+        }
+
+        time.sleep(0.5)
+        print("Thank you for your feedback!.....")
+        time.sleep(0.5)
+        print("Returning back to user menu.....")
+        time.sleep(0.5)
+        feedbacks.append(feedback)
+        self.file_handler.save_to_file(feedbacks, "feedbacks.txt")
+
+
+
 
 
 

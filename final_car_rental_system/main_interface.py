@@ -85,18 +85,19 @@ class Interface:
         print("=" * 30)
         print(f"Mr./ Mrs {self.customer.name.upper()}'s Dashboard")
         print("=" * 30)
-        print("Please choose from the following options:")
-        print("Note: Once you exit the user menu, you have to then login again\n")
         print("=" * 30)
         print("1. Rent a Car")
         print("2. Return Car")
         print("3. Check Status")
         print("4. Update Balance")
-        print("5. View All Available Cars")
-        print("6. View Specific Car")
-        print("7. Exit")
+        print("5. Update Your Information")
+        print("6. View All Available Cars")
+        print("7. View Specific Car")
+        print("8. Have any complain? Feel free to write it in your feedback!")
+        print("9. Exit")
         print("=" * 30)
-        print()
+        print("Please choose from the following options:")
+        print("Note: Once you exit the user menu, you have to then login again\n")
 
     def choice_user(self):
         while True:
@@ -123,14 +124,22 @@ class Interface:
                     self.user_menu()
 
                 if choice == "5":
-                    self.car.display_all_vehicles()
+                    self.customer.update_info()
                     self.user_menu()
 
                 if choice == "6":
-                    self.car.display_vehicle_info()
+                    self.car.display_all_vehicles()
                     self.user_menu()
 
                 if choice == "7":
+                    self.car.display_vehicle_info()
+                    self.user_menu()
+
+                if choice == "8":
+                    self.customer.write_feedback()
+                    self.user_menu()
+
+                if choice == "9":
                     print("Returning back to main menu....\n")
                     self.main_menu()
 
@@ -138,13 +147,13 @@ class Interface:
                 if not choice.isdigit():
                     raise TypeError
                 #  EXCEPTION: Invalid number entry
-                if int(choice) < 1 or int(choice) > 7:
+                if int(choice) < 1 or int(choice) > 9:
                     raise ValueError
 
             #  HANDLING: Invalid entry
             except TypeError:
-                print("Error: You did not enter a number. Please enter a number from 1 ----> 7")
+                print("Error: You did not enter a number. Please enter a number from 1 ----> 9")
 
             #  HANDLING: Invalid number entry
             except ValueError:
-                print("Please enter a number from 1 ----> 7")
+                print("Please enter a number from 1 ----> 9")
