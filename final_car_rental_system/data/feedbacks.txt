@@ -1,1 +1,0 @@
-{'Name': 'Usman Siddiqui', 'Feedback': 'I appreciate the user friendly environment of this car rental system. Morre improvements will really shape this system into more detailed one.'}

@@ -1,1 +1,0 @@
-{'car_id': '3ac92c77-105a-4ef2-a501-e94ff6c0e4b1', 'brand': 'Tesla', 'model': 'Model 3', 'days': 6, 'rental_date': '2025-05-05', 'return_date': '2025-05-11', 'total_cost': 720}

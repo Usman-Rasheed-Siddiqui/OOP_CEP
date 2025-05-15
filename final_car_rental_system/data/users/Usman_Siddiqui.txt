@@ -1,1 +1,2 @@
-{'car_id': 'bcf624d2-f258-4e83-ba84-617f25210bc4', 'brand': 'Toyota', 'model': 'Corolla', 'days': 45, 'rental_date': '2025-05-05', 'return_date': '2025-06-19', 'total_cost': 2475}
+{'car_id': 'bcf624d2-f258-4e83-ba84-617f25210bc4', 'brand': 'Toyota', 'model': 'Corolla', 'days': 5, 'rental_date': '2025-05-15', 'return_date': '2025-05-20', 'total_cost': 275}
+{'car_id': '2e8cfa6b-14c6-41b3-8b5f-9cce3a1c5d12', 'brand': 'Nissan', 'model': 'Sunny', 'days': 7, 'rental_date': '2025-05-15', 'return_date': '2025-05-22', 'total_cost': 280}

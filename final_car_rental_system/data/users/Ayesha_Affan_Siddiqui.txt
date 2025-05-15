@@ -1,1 +1,0 @@
-{'car_id': 'c9e4ed72-f71f-48d7-b79e-b13853ebd004', 'brand': 'Ford', 'model': 'Endeavour', 'days': 12, 'rental_date': '2025-05-06', 'return_date': '2025-05-18', 'total_cost': 1080}

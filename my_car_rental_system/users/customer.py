@@ -185,7 +185,6 @@ class Customer(User):
         except Exception as e:
             print(f"Error: {e}")
 
-
     def returning(self):
 
         car_id = input("Enter car id: ")
@@ -223,7 +222,6 @@ class Customer(User):
             print("Thank you for your feedback!")
         feedbacks.append(feedback)
         self.file_handler.save_to_file(feedbacks, "feedbacks.txt")
-
 
 
     def display_user_info(self):

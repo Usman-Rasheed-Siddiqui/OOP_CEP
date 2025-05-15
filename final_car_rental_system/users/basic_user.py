@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from exception_handling.Exceptions import PasswordError
 from re import search
+import time
 
 class User(ABC):
     def __init__(self, first_name="", last_name="", password=""):
@@ -13,9 +14,25 @@ class User(ABC):
     def display_user_info(self):
         pass
 
+    def quit_choice(self, choice):
+        """Check if user wants to quit (entered 'q' or 'Q')"""
+        if choice == "q" or choice == "Q":
+            print("Returning back to menu.....\n")
+            time.sleep(0.5)
+            return True
+        return False
+
     def login(self):
+        print("Press q/Q at any time to quit\n")
         self.name = input("Enter your name: ").strip()
+        if self.quit_choice(self.name):
+            return False
+
         self.password = input("Enter your password: ").strip()
+        if self.quit_choice(self.password):
+            return False
+
+        return True
 
     def validate_new_password(self, password):
         if len(password) < 8:

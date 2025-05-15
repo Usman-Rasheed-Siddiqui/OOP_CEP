@@ -1,1 +1,10 @@
+{'car_id': 'f1324d34-b9e8-4f27-8e9c-1a5e2eaf47b3', 'customer': None, 'brand': 'Honda', 'model': 'Civic', 'rental_date': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}
+{'car_id': '83af67e3-d84c-4219-b472-919cc2ae7761', 'customer': None, 'brand': 'Hyundai', 'model': 'Creta', 'rental_date': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}
+{'car_id': '4be8bc54-5a12-4c6f-97d4-c8d9d1a21e1d', 'customer': None, 'brand': 'Mercedes', 'model': 'C-Class', 'rental_date': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}
+{'car_id': '9c79c0d1-5c2a-4b84-88c6-5a8c5a6a0e4e', 'customer': None, 'brand': 'BMW', 'model': 'X5', 'rental_date': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}
+{'car_id': 'd12a3642-9e7f-4e47-8f1d-9e39b6f17b7f', 'customer': None, 'brand': 'Audi', 'model': 'Q5', 'rental_date': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}
+{'car_id': '2c026418-6111-4d4a-a91b-dffd2626ec7b', 'customer': None, 'brand': 'Toyota', 'model': 'Corolla', 'rental_date': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}
+{'car_id': '3ac92c77-105a-4ef2-a501-e94ff6c0e4b1', 'customer': None, 'brand': 'Tesla', 'model': 'Model 3', 'rental_date': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}
+{'car_id': 'c9e4ed72-f71f-48d7-b79e-b13853ebd004', 'customer': None, 'brand': 'Ford', 'model': 'Endeavour', 'rental_date': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}
 {'car_id': 'bcf624d2-f258-4e83-ba84-617f25210bc4', 'customer': None, 'brand': 'Toyota', 'model': 'Corolla', 'rental_data': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}
+{'car_id': '2e8cfa6b-14c6-41b3-8b5f-9cce3a1c5d12', 'customer': None, 'brand': 'Nissan', 'model': 'Sunny', 'rental_data': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}
