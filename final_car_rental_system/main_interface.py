@@ -85,7 +85,6 @@ class Interface:
         print("=" * 30)
         print(f"Mr./ Mrs {self.customer.name.upper()}'s Dashboard")
         print("=" * 30)
-        print("=" * 30)
         print("1. Rent a Car")
         print("2. Return Car")
         print("3. Check Status")

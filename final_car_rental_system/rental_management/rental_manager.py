@@ -13,6 +13,7 @@ class RentalManager:
         self.days = 0
         self.expected_cost = expected_cost
         self.total_cost = 0
+        self.penalty_amount = 0
         self.file_handler = FileHandler()
         self.cars = self.file_handler.load_from_file("cars.txt")
         self.users = self.file_handler.load_from_file("users.txt")
@@ -45,6 +46,7 @@ class RentalManager:
     #             print(f"{att} : {rents}", end =" | ")
     #         print()
 
+#------------------------------------------------RENTING PROCESS-------------------------------------------
 
     def process_rental(self, customer):
 
@@ -78,7 +80,7 @@ class RentalManager:
                         for user in users:
                             if user["name"] == customer:
                                 if user["balance"] < self.total_cost:
-                                    raise InsufficientBalanceError
+                                    raise InsufficientBalanceError("Your balance is insufficient. Please update your balance to make a rent")
                     except InsufficientBalanceError as e:
                         print("Error:", e)
 
@@ -126,6 +128,8 @@ class RentalManager:
         self.file_handler.save_to_file(available_cars, "available_cars.txt")
         return rental
 
+#------------------------------------------PENALTY MANAGEMENT------------------------------------------------
+
     def penalty(self, actual_date, return_date, car, users, customer):
 
         if actual_date <= return_date:
@@ -135,22 +139,34 @@ class RentalManager:
             actual_days = (actual_date - return_date).days
             days_difference = actual_days - self.days
             penalty = extra * days_difference
+
             self.total_cost += penalty
 
             for user in users:
                 if user["name"] == customer:
-                    user["balance"] -= penalty
 
-            print("You have used the car more than the rental date...")
-            time.sleep(0.4)
-            print("decided. We will charge extra amount....")
-            time.sleep(0.4)
-            print(f"You have to pay {penalty} PKR more.....")
-            time.sleep(0.4)
-            print(f"Total amount is now: {self.total_cost}...")
-            time.sleep(0.4)
+                    if self.penalty_balance_comparision(user["balance"], penalty):
+                        user["balance"] -= penalty
+                        print("You have used the car more than the rental date...")
+                        time.sleep(0.4)
+                        print("decided. We will charge extra amount....")
+                        time.sleep(0.4)
+                        print(f"You have to pay {penalty} PKR more.....")
+                        time.sleep(0.4)
+                        print(f"Total amount is now: {self.total_cost}...")
+                        time.sleep(0.4)
 
+    def penalty_balance_comparision(self, balance, penalty):
+        if balance > penalty:
+            return True
+        elif balance < penalty:
+            print("Your balance is less than the penalty amount...")
+            time.sleep(0.4)
+            print(f"{self.penalty_amount} will be deducted on the next deposit..")
+            time.sleep(0.5)
+        return
 
+#---------------------------------------------RETURNING PROCESS---------------------------------------------
 
     def process_return(self, car_id, customer):
 
@@ -225,13 +241,15 @@ class RentalManager:
 
         return giveaway
 
+#--------------------------------------------RECEIPT GENERATION--------------------------------------------
+
     def print_receipt(self, customer):
         print(f"""
 {"="*38}
             RECEIPT
 {"="*38}
 Customer Name : {customer}
-Car ID: {self.car_id}   (Note: Please take a screenshot of receipt to remember the Car ID when returning)
+Car ID: {self.car_id}
 Car : {self.car.brand} {self.car.model}
 Rental Date : {self.rental_date}
 Return Date : {self.return_date}
@@ -240,3 +258,4 @@ Total Days : {self.days}
 Total Cost: {self.total_cost}
 {"="*38}
 """)
+        print("Note: Please take a screenshot of receipt to remember the Car ID when returning")

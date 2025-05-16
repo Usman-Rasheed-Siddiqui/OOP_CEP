@@ -19,8 +19,8 @@ class CarNotRentedError(Exception):
         return self.message
 
 class InsufficientBalanceError(Exception):
-    def __init__(self):
-        self.message = "Your balance is insufficient. Please update your balance to make a rent"
+    def __init__(self, message):
+        self.message = message
         super().__init__(self.message)
 
     def __str__(self):

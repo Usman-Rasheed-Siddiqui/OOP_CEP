@@ -168,9 +168,11 @@ class Customer(User):
 
 # -----------------------------------------RENTING AND RETURNING PROCESS-----------------------------------
 
+    # CHECKING RENTS
     def check_rent(self, rented_car):
         if rented_car == 1:
             raise AlreadyRentedError("You already have a car rented\n")
+
 
     # RENTING
     def renting(self):
@@ -227,7 +229,7 @@ class Customer(User):
                 }
         try:
             for user in users:
-                if user["name"] == customer:
+                if user["name"].lower() == customer.lower():
                     if user["balance"] < rental_manager.total_cost:
                        raise Exception("You don't have enough money to rent this car. Please update your balance and try again.")
 
@@ -270,7 +272,7 @@ class Customer(User):
 
         users = self.all_users
         for user in users:
-            if user["name"] == self.name:
+            if user["name"].lower() == self.name.lower():
                 user["rented_car"] = 0
 
         print("Preparing to take your car...")
@@ -428,11 +430,3 @@ Balance : {user["balance"]}
         time.sleep(0.5)
         feedbacks.append(feedback)
         self.file_handler.save_to_file(feedbacks, "feedbacks.txt")
-
-
-
-
-
-
-
-
