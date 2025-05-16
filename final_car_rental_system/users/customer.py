@@ -1,4 +1,4 @@
-import users
+from vehicle.car import Car
 from .basic_user import User
 from rental_management.rental_manager import RentalManager
 from file_handler.file_handler import FileHandler
@@ -13,6 +13,9 @@ class Customer(User):
         self.file_handler = FileHandler()
         self.all_users = self.file_handler.load_from_file("users.txt")
         self.rented_cars = 0
+        self.name = ""
+        self.car = Car()
+        self.safe_name = ""
 
     @staticmethod
     def enter_to_continue():
@@ -20,7 +23,6 @@ class Customer(User):
             print("Please just press Enter without typing anything.")
 
 # ------------------------------------------------LOGIN AND SIGN UP-----------------------------------------
-
 
     def login(self):
         print("=" * 30)
@@ -190,6 +192,7 @@ class Customer(User):
                 if user["name"].lower() == customer.lower():
                     user_found = True
                     self.name = user["name"]
+                    customer = user["name"]
                     self.check_rent(user["rented_car"])
 
             if not user_found:
@@ -209,9 +212,10 @@ class Customer(User):
         if self.quit_choice(model):
             return False
 
+        self.car = Car(brand, model)
 
-        safe_name = customer.replace(" ", "_")
-        user_rental_history = self.file_handler.load_from_file(f"users/{safe_name}.txt")
+        self.safe_name = customer.replace(" ", "_")
+        user_rental_history = self.file_handler.load_from_file(f"users/{self.safe_name}.txt")
 
         rental_manager = RentalManager(brand, model)
         car = rental_manager.process_rental(customer)
@@ -238,7 +242,7 @@ class Customer(User):
 
                     user_rental_history.append(rent)
                     self.file_handler.save_to_file(users, "users.txt")
-                    self.file_handler.save_to_file(user_rental_history, f"users/{safe_name}.txt")
+                    self.file_handler.save_to_file(user_rental_history, f"users/{self.safe_name}.txt")
                     time.sleep(0.5)
                     print("Preparing your car....")
                     time.sleep(0.5)
@@ -262,7 +266,7 @@ class Customer(User):
         print("RETURNING")
         print("=" * 30)
         print()
-        car_id = input("Enter car id: ")
+        car_id = input("Enter car id: ").strip()
         self.quit_choice(car_id)
 
         rental_manager = RentalManager()
@@ -273,7 +277,19 @@ class Customer(User):
         users = self.all_users
         for user in users:
             if user["name"].lower() == self.name.lower():
+                user["balance"] -= rental_manager.penalty_amount
+                customer_user = self.file_handler.load_from_file(f"users/{self.safe_name}.txt")
+                for car in customer_user:
+                    if car["brand"].lower()== self.car.brand.lower():
+                        if car["model"].lower()== self.car.model.lower():
+                            car["total cost"] -= rental_manager.penalty_amount
+
+                self.file_handler.save_to_file(customer_user, f"users/{self.safe_name}.txt")
+
                 user["rented_car"] = 0
+                break
+
+        self.file_handler.save_to_file(users, f"users.txt")
 
         print("Preparing to take your car...")
         time.sleep(0.5)
@@ -285,7 +301,6 @@ class Customer(User):
         self.enter_to_continue()
         print("Returning back to user menu.....")
         time.sleep(0.5)
-        self.file_handler.save_to_file(users, f"users.txt")
         return True
 
 # ----------------------------------------------USER INSPECTION--------------------------------------------
@@ -342,9 +357,13 @@ Balance : {user["balance"]}
                         if user["balance"] + balance > 50000:
                             raise OverflowError("Balance can be at most 50000 PKR")
 
+                        if user["balance"] < 0:
+                            print(f"{-1 * user["balance"]} PKR will be deducted from your deposit")
+
                         user["balance"] += balance
                         self.file_handler.save_to_file(users, "users.txt")
                         print("Balance updated successfully!")
+                        print(f"Updated balance: {user['balance']} PKR")
                         time.sleep(0.5)
                         print("Returning back to user menu.....")
                         time.sleep(0.5)

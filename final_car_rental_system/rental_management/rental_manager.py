@@ -78,7 +78,7 @@ class RentalManager:
                     self.total_cost = self.days * car["price_per_day"]
                     try:
                         for user in users:
-                            if user["name"] == customer:
+                            if user["name"].lower() == customer.lower():
                                 if user["balance"] < self.total_cost:
                                     raise InsufficientBalanceError("Your balance is insufficient. Please update your balance to make a rent")
                     except InsufficientBalanceError as e:
@@ -134,35 +134,34 @@ class RentalManager:
 
         if actual_date <= return_date:
             self.total_cost = car["total_cost"]
+            return 0
         else:
             extra = 20
-            actual_days = (actual_date - return_date).days
-            days_difference = actual_days - self.days
+            days_difference = (actual_date - return_date).days
             penalty = extra * days_difference
 
-            self.total_cost += penalty
-
             for user in users:
-                if user["name"] == customer:
-
+                if user["name"].lower() == customer.lower():
                     if self.penalty_balance_comparision(user["balance"], penalty):
-                        user["balance"] -= penalty
-                        print("You have used the car more than the rental date...")
-                        time.sleep(0.4)
+
+                        print("You have used the car more than the rental date")
                         print("decided. We will charge extra amount....")
                         time.sleep(0.4)
-                        print(f"You have to pay {penalty} PKR more.....")
+                        print(f"An amount of {penalty} PKR is being deducted from your balance.....")
                         time.sleep(0.4)
-                        print(f"Total amount is now: {self.total_cost}...")
-                        time.sleep(0.4)
+
+        return penalty
 
     def penalty_balance_comparision(self, balance, penalty):
         if balance > penalty:
             return True
         elif balance < penalty:
+            print("You have used the car more than the rental date")
+            print("decided. We will charge extra amount....")
+            time.sleep(0.5)
             print("Your balance is less than the penalty amount...")
             time.sleep(0.4)
-            print(f"{self.penalty_amount} will be deducted on the next deposit..")
+            print(f"{penalty - balance} PKR will be deducted on the next deposit..")
             time.sleep(0.5)
         return
 
@@ -192,7 +191,7 @@ class RentalManager:
                         self.car.model = car["model"]
 
                         actual_date = datetime.now().date()
-                        self.penalty(actual_date, self.return_date, car, users, customer)
+                        self.penalty_amount = self.penalty(actual_date, self.return_date, car, users, customer)
                         break
 
             if not customer_found:
@@ -233,7 +232,6 @@ class RentalManager:
             if car["car_id"] == giveaway["car_id"]:
                 rented_cars.remove(car)
 
-        self.file_handler.save_to_file(users, "users.txt")
         self.file_handler.save_to_file(user_rental_history, f"users/{safe_name}.txt")
         self.file_handler.save_to_file(available_cars, "available_cars.txt")
         self.file_handler.save_to_file(rented_cars, "rented_cars.txt")

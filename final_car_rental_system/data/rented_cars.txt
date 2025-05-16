@@ -1,1 +1,0 @@
-{'car_id': '2e8cfa6b-14c6-41b3-8b5f-9cce3a1c5d12', 'customer': 'huzaifa hanif', 'brand': 'Nissan', 'model': 'Sunny', 'rental_date': '2025-05-16', 'return_date': '2025-05-22', 'total_days': 6, 'total_cost': 240}
