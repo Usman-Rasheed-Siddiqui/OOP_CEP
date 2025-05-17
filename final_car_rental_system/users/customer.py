@@ -4,7 +4,6 @@ from rental_management.rental_manager import RentalManager
 from file_handler.file_handler import FileHandler
 from exception_handling.Exceptions import AlreadyRentedError, AccountNotFoundError, WrongPasswordError, PasswordError, CustomerNoRentsError
 import time
-from nanoid import generate
 
 class Customer(User):
     def __init__(self, brand="",model="", first_name="", last_name="", email="",password="", address="", balance=""):
@@ -82,7 +81,7 @@ class Customer(User):
             try:
                 self.first_name = input("Enter your first name: ").strip()
                 if self.quit_choice(self.first_name):
-                    return False
+                    return
 
                 if not self.first_name:
                     raise ValueError("First Name field is required")
@@ -100,7 +99,7 @@ class Customer(User):
             try:
                 self.last_name = input("Enter your last name: ").strip()
                 if self.quit_choice(self.first_name):
-                    return False
+                    return
                 if not self.last_name:
                     raise ValueError("Last Name field is required")
                 if len(self.last_name) < 3:
@@ -115,14 +114,11 @@ class Customer(User):
             try:
                 self.email = input("Enter your email: ").strip().lower()
                 if self.quit_choice(self.first_name):
-                    return False
+                    return
                 if not self.email:
                     raise ValueError("Email field is required")
-                if len(self.email) <= 40:
-                    raise OverflowError("Email must be less than 40 characters")
 
                 self.validate_email(self.email)
-
 
                 for user in self.all_users:
                     if user["email"] == self.email:
@@ -135,7 +131,7 @@ class Customer(User):
             try:
                 self.password = input("Enter your password: ").strip()
                 if self.quit_choice(self.first_name):
-                    return False
+                    return
                 for user in self.all_users:
                     if user["password"] == self.password:
                         raise PasswordError("Password already exists")
@@ -150,7 +146,7 @@ class Customer(User):
             try:
                 self.address = input("Enter your address: ").strip()
                 if self.quit_choice(self.first_name):
-                    return False
+                    return
 
                 if not self.address:
                     raise ValueError("Address field are required")
@@ -172,7 +168,7 @@ class Customer(User):
             try:
                 self.balance = input("Enter your balance: ").strip()
                 if self.quit_choice(self.first_name):
-                    return False
+                    return
 
                 if not self.balance.isdigit():
                     raise ValueError("Balance must be an integer")
@@ -244,17 +240,18 @@ class Customer(User):
         except AlreadyRentedError as e:
             print(f"Error: {e}")
             self.enter_to_continue()
-            return False
+            return
+        
         except AccountNotFoundError as e:
             print(f"Error: {e}")
             return False
 
         brand = input("Enter brand you want to rent: ").strip()
         if self.quit_choice(brand):
-            return False
+            return
         model = input("Enter model you want to rent: ").strip()
         if self.quit_choice(model):
-            return False
+            return
 
         self.safe_email = customer.replace("@", "_at_").replace(".", "_dot_")
         user_rental_history = self.file_handler.load_from_file(f"users/{self.safe_email}.txt")
