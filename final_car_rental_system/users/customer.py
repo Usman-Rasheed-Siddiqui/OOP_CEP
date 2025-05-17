@@ -1,12 +1,14 @@
 from .basic_user import User
+from vehicle.car import Car
 from rental_management.rental_manager import RentalManager
 from file_handler.file_handler import FileHandler
-from exception_handling.Exceptions import AlreadyRentedError, AccountNotFoundError, WrongPasswordError, PasswordError
+from exception_handling.Exceptions import AlreadyRentedError, AccountNotFoundError, WrongPasswordError, PasswordError, CustomerNoRentsError
 import time
 
 class Customer(User):
-    def __init__(self, first_name="", last_name="", password="", address="", balance=""):
+    def __init__(self, brand="",model="", first_name="", last_name="", password="", address="", balance=""):
         super().__init__(first_name, last_name, password)
+        self.car = Car(brand, model)
         self.address = address
         self.balance = balance
         self.file_handler = FileHandler()
@@ -30,6 +32,8 @@ class Customer(User):
 
     def password_check(self, name, password):
         attempts = 3
+        self.all_users = self.file_handler.load_from_file("users.txt")
+        self.cars_rented = self.file_handler.load_from_file("rented_cars.txt")
 
         while attempts > 0:
             user_found = False
@@ -68,6 +72,9 @@ class Customer(User):
         print("=" * 30)
         print()
         print("Press q/Q at any time to quit\n")
+
+        self.all_users = self.file_handler.load_from_file("users.txt")
+        self.cars_rented = self.file_handler.load_from_file("rented_cars.txt")
         while True:
             try:
                 self.first_name = input("Enter your first name: ").strip()
@@ -178,6 +185,9 @@ class Customer(User):
         print()
         print("Press q/Q at anytime to quit.")
         print()
+
+        self.all_users = self.file_handler.load_from_file("users.txt")
+        self.cars_rented = self.file_handler.load_from_file("rented_cars.txt")
         users = self.all_users
         user_found = False
         customer = self.name
@@ -251,29 +261,50 @@ class Customer(User):
         print("RETURNING")
         print("=" * 30)
         print()
+        car_rented = self.file_handler.load_from_file("rented_cars.txt")
+        car_found = False
+
+        while True:
+            try:
+                for car in car_rented:
+                    if car["customer"].lower() == self.name.lower():
+                        car_found = True
+                if not car_found:
+                    raise CustomerNoRentsError
+                break
+            except CustomerNoRentsError as e:
+                print(f"Error: {e}")
+                self.enter_to_continue()
+                print("Returning back to user menu.....")
+                time.sleep(0.5)
+                return
+
         car_id = input("Enter car id: ").strip()
-        self.quit_choice(car_id)
+        if self.quit_choice(car_id):
+            return
 
         rental_manager = RentalManager()
         car = rental_manager.process_return(car_id, self.name)
         if not car:
             return False
 
+        self.all_users = self.file_handler.load_from_file("users.txt")
+        self.cars_rented = self.file_handler.load_from_file("rented_cars.txt")
 
         users = self.all_users
         for user in users:
             if user["name"].lower() == self.name.lower():
                 for rent_car in self.cars_rented:
                     if rent_car["customer"].lower() == user["name"].lower():
-                        brand = rent_car["brand"]
-                        model = rent_car["model"]
+                        self.car.brand = rent_car["brand"]
+                        self.car.model = rent_car["model"]
 
                 user["balance"] -= rental_manager.penalty_amount
                 self.safe_name = user["name"].replace(" ", "_")
                 customer_user = self.file_handler.load_from_file(f"users/{self.safe_name}.txt")
                 for car in customer_user:
-                    if car["brand"].lower()== brand.lower():
-                        if car["model"].lower()== model.lower():
+                    if car["brand"].lower()== self.car.brand.lower():
+                        if car["model"].lower()== self.car.model.lower():
                             car["total_cost"] -= rental_manager.penalty_amount
 
                 self.file_handler.save_to_file(customer_user, f"users/{self.safe_name}.txt")
@@ -298,22 +329,25 @@ class Customer(User):
 # ----------------------------------------------USER INSPECTION--------------------------------------------
     def display_user_info(self):
 
+        self.all_users = self.file_handler.load_from_file("users.txt")
+        self.cars_rented = self.file_handler.load_from_file("rented_cars.txt")
+
         for user in self.all_users:
             try:
                 if user["name"].lower() == self.name.lower():
                     for car in self.cars_rented:
                         if user["name"].lower() == car["customer"].lower():
-                            user_car_id = car["car_id"]
+                            self.car.car_id = car["car_id"]
                         else:
-                            user_car_id = "No Car Rented Yet"
+                            self.car.car_id = "No Car Rented Yet"
                     print (f"""
 {"="*30}
       USER INFORMATION
 {"="*30}
 Name : {user["name"]}
 Address : {user["address"]}
-Balance : {user["balance"]}
-Rented Car ID: {user_car_id}
+Balance : {f"{user["balance"]} PKR" if user["balance"] > 0 else f"{user["balance"]*-1} PKR With be deducted on next deposit"}
+Rented Car ID: {self.car.car_id}
 {"="*30}
 """)
                     self.enter_to_continue()
@@ -332,6 +366,7 @@ Rented Car ID: {user_car_id}
         print("=" * 30)
         print("Press q/Q at any time to quit")
         print()
+        self.all_users = self.file_handler.load_from_file("users.txt")
         users = self.all_users
         while True:
             try:
@@ -374,6 +409,7 @@ Rented Car ID: {user_car_id}
                 print(f"Error: {e}")
 
     def update_info(self, member=None):
+        self.all_users = self.file_handler.load_from_file("users.txt")
         users = self.all_users
         while True:
             try:

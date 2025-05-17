@@ -26,7 +26,7 @@ class Admin(User):
             return True
 
     def update_info(self, member = None):
-
+        self.admin_info = self.file_handler.load_from_file("admin_info.txt")
         while True:
             try:
                 for admin in self.admin_info:
@@ -43,6 +43,7 @@ class Admin(User):
                 print("Error:", e)
 
     def check_admin_password(self):
+        self.admin_info = self.file_handler.load_from_file("admin_info.txt")
         attempts = 3
         while attempts > 0:
             try:
@@ -72,6 +73,9 @@ class Admin(User):
         print("=" * 30)
         print("Press q/Q at anytime to quit the process")
         print()
+        self.cars = self.file_handler.load_from_file("cars.txt")
+        self.available_cars = self.file_handler.load_from_file("available_cars.txt")
+
         while True:
             try:
                 no_of_cars = input("Enter the number of cars to be added: ").strip()
@@ -270,6 +274,9 @@ class Admin(User):
         print("=" * 30)
         print("Press q/Q at anytime to quit the process")
         print()
+        self.cars = self.file_handler.load_from_file("cars.txt")
+        self.available_cars = self.file_handler.load_from_file("available_cars.txt")
+
         while True:
             try:
                 self.car.brand = input("Enter brand name: ").strip()
@@ -308,7 +315,7 @@ class Admin(User):
             try:
                 for available_car in available_cars:
                     if available_car["brand"].lower() == self.car.brand.lower() and available_car["model"].lower() == self.car.model.lower():
-                        available_cars.remove(car)
+                        available_cars.remove(available_car)
                         for car in cars:
                             if car["brand"].lower() == self.car.brand.lower() and car["model"].lower() == self.car.model.lower():
                                     cars.remove(car)

@@ -49,6 +49,10 @@ class RentalManager:
 #------------------------------------------------RENTING PROCESS-------------------------------------------
 
     def process_rental(self, customer):
+        self.cars = self.file_handler.load_from_file("cars.txt")
+        self.users = self.file_handler.load_from_file("users.txt")
+        self.rented_cars = self.file_handler.load_from_file("rented_cars.txt")
+        self.available_cars = self.file_handler.load_from_file("available_cars.txt")
 
         cars = self.cars
         users = self.users
@@ -170,20 +174,21 @@ class RentalManager:
 
     def process_return(self, car_id, customer):
 
+        self.cars = self.file_handler.load_from_file("cars.txt")
+        self.users = self.file_handler.load_from_file("users.txt")
+        self.rented_cars = self.file_handler.load_from_file("rented_cars.txt")
+        self.available_cars = self.file_handler.load_from_file("available_cars.txt")
+
         rented_cars = self.rented_cars
         available_cars = self.available_cars
         cars = self.cars
         users = self.users
-        customer_found = False
         car_found = False
 
         try:
             for car in rented_cars:
                 if car["car_id"] == car_id:
-                    car_found = True
-                    if car["customer"].lower() == customer.lower():
-                        customer_found = True
-
+                        car_found = True
                         self.days = car["total_days"]
                         self.return_date = datetime.strptime(car["return_date"], "%Y-%m-%d").date()
                         self.car.brand = car["brand"]
@@ -193,16 +198,14 @@ class RentalManager:
                         self.penalty_amount = self.penalty(actual_date, self.return_date, car, users, customer)
                         break
 
-            if not customer_found:
-                raise CustomerNoRentsError
             if not car_found:
                 raise CarNotRentedError
 
-        except CustomerNoRentsError as e:
-            print("Error:", e)
-            return
         except CarNotRentedError as e:
             print("Error:", e)
+            time.sleep(0.5)
+            print("Returning back to user menu.....")
+            time.sleep(0.5)
             return
 
         giveaway = {

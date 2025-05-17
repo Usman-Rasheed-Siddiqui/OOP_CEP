@@ -12,7 +12,7 @@ class CarNotAvailableError(Exception):
 
 class CarNotRentedError(Exception):
     def __init__(self):
-        self.message = "Car with this brand and model does not seem to match our record. Please try again."
+        self.message = "Car with this ID does not seem to match our rental record. Please try again."
         super().__init__(self.message)
 
     def __str__(self):
