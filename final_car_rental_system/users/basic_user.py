@@ -13,6 +13,8 @@ class User(ABC):
         self.name = self.first_name+" "+self.last_name
         self.password = password
         self.email = email
+        self.bold_italics = '\033[1m\033[3m'
+        self.reset = '\033[0m'
 
     @abstractmethod
     def display_user_info(self):
@@ -68,6 +70,8 @@ class User(ABC):
         print("If you don't want to change something, just press enter.")
 
         self.password = input("Enter your new password (8+ characters): ").strip()
+        if self.quit_choice(self.password):
+            return
         if self.password != "":
             self.validate_new_password(self.password)
             member["password"] = self.password

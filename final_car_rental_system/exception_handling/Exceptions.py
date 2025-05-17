@@ -36,7 +36,7 @@ class CustomerNoRentsError(Exception):
 
 class AccountNotFoundError(Exception):
     def __init__(self):
-        self.message = "Account with this name not found"
+        self.message = "Account with this email not found"
 
     def __str__(self):
         return self.message

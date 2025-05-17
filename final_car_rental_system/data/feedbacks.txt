@@ -1,1 +1,1 @@
-{'Name': 'usman siddiqui', 'Feedback': 'It would be much helpful if there is an administrator...'}
+{'name': 'usman siddiqui', 'email': 'siddiqui.uas1@gmail.com','feedback': 'It would be much helpful if there is an administrator...'}

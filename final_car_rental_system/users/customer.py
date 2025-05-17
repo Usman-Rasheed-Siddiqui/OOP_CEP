@@ -89,6 +89,9 @@ class Customer(User):
 
                 if len(self.first_name) < 3:
                     raise ValueError("First Name must be at least 3 characters long")
+
+                if len(self.first_name) > 20:
+                    raise ValueError("Last Name must be at most 20 characters long")
                 break
             except ValueError as e:
                 print("Invalid Entry:",e)
@@ -102,6 +105,8 @@ class Customer(User):
                     raise ValueError("Last Name field is required")
                 if len(self.last_name) < 3:
                     raise ValueError("Last Name must be at least 3 characters long")
+                if len(self.last_name) > 20:
+                    raise ValueError("Last Name must be at most 20 characters long")
                 break
             except ValueError as e:
                 print("Invalid Entry:",e)
@@ -113,8 +118,11 @@ class Customer(User):
                     return False
                 if not self.email:
                     raise ValueError("Email field is required")
+                if len(self.email) <= 40:
+                    raise OverflowError("Email must be less than 40 characters")
 
                 self.validate_email(self.email)
+
 
                 for user in self.all_users:
                     if user["email"] == self.email:
@@ -147,12 +155,18 @@ class Customer(User):
                 if not self.address:
                     raise ValueError("Address field are required")
 
+                if len(self.address) > 50:
+                    raise OverflowError("Address cannot be longer than 50 characters")
+
                 if self.address.isdigit():
                     raise Exception("Address can't be just an integer")
 
                 break
             except ValueError as e:
                 print("Invalid Entry:",e)
+
+            except OverflowError as e:
+                print("Error:",e)
 
         while True:
             try:
@@ -211,6 +225,8 @@ class Customer(User):
 
         self.all_users = self.file_handler.load_from_file("users.txt")
         self.cars_rented = self.file_handler.load_from_file("rented_cars.txt")
+        rental_history = self.file_handler.load_from_file("cars_rental_history.txt")
+
         users = self.all_users
         user_found = False
         customer = self.email
@@ -264,8 +280,12 @@ class Customer(User):
                 user["rented_car"] = 1
 
                 user_rental_history.append(rent)
+                rental_history.append(rent)
+
                 self.file_handler.save_to_file(users, "users.txt")
                 self.file_handler.save_to_file(user_rental_history, f"users/{self.safe_email}.txt")
+                self.file_handler.save_to_file(rental_history, "cars_rental_history.txt")
+
                 time.sleep(0.5)
                 print("Preparing your car....")
                 time.sleep(0.5)
@@ -330,7 +350,7 @@ class Customer(User):
                         if car["model"].lower()== self.car.model.lower():
                             car["total_cost"] -= rental_manager.penalty_amount
 
-                self.file_handler.save_to_file(customer_user, f"users/{self.safe_name}.txt")
+                self.file_handler.save_to_file(customer_user, f"users/{self.safe_email}.txt")
 
                 user["rented_car"] = 0
                 break
@@ -351,7 +371,6 @@ class Customer(User):
 
 # ----------------------------------------------USER INSPECTION--------------------------------------------
     def display_user_info(self):
-
         self.all_users = self.file_handler.load_from_file("users.txt")
         self.cars_rented = self.file_handler.load_from_file("rented_cars.txt")
 
@@ -367,11 +386,11 @@ class Customer(User):
 {"="*30}
       USER INFORMATION
 {"="*30}
-Name : {user["name"]}
-Email : {user["email"]}
-Address : {user["address"]}
-Balance : {f"{user["balance"]} PKR" if user["balance"] > 0 else f"{user["balance"]*-1} PKR With be deducted on next deposit"}
-Rented Car ID: {self.car.car_id}
+{self.bold_italics}Name{self.reset} : {user["name"]}
+{self.bold_italics}Email{self.reset} : {user["email"]}
+{self.bold_italics}Address{self.reset} : {user["address"]}
+{self.bold_italics}Balance{self.reset} : {f"{user["balance"]} PKR" if user["balance"] > 0 else f"{user["balance"]*-1} PKR With be deducted on next deposit"}
+{self.bold_italics}Rented Car ID{self.reset}: {self.car.car_id}
 {"="*30}
 """)
                     self.enter_to_continue()
@@ -383,7 +402,63 @@ Rented Car ID: {self.car.car_id}
                 time.sleep(0.5)
                 return
 
-#------------------------------------------------INFORMATION UPDATE--------------------------------------------
+    def user_rental_history(self):
+        print("=" * 30)
+        print("USER RENTAL HISTORY")
+        print("=" * 30)
+        print()
+        self.all_users = self.file_handler.load_from_file("users.txt")
+        user_found = False
+
+        while True:
+            try:
+                for user in self.all_users:
+                    if user["email"].lower() == self.email.lower():
+                        user_found = True
+                        self.email = user["email"]
+                if not user_found:
+                    raise AccountNotFoundError
+                break
+            except AccountNotFoundError as e:
+                print("Error:", e)
+                self.enter_to_continue()
+                print("Returning back to user menu.....")
+                time.sleep(0.5)
+                return
+
+        self.safe_email = self.email.replace("@", "_at_").replace(".", "_dot_")
+        one_user = self.file_handler.load_from_file(f"users/{self.safe_email}.txt")
+        if not one_user:
+            print("You don't have any rental history. Please rent a car using our system")
+            self.enter_to_continue()
+            print("Returning back to user menu.....")
+            time.sleep(0.5)
+            return
+
+        columns = [
+            ("S.No.", 5), ("Car Name", 20), ("Days", 5), ("Rental Date", 15), ("Return Date", 15),
+            ("Total Cost (PKR)", 20)
+        ]
+
+        header = ""
+        for col_name, width in columns:
+            header += f"| {self.bold_italics}{col_name:<{width}}{self.reset}"
+        print(header + "|")
+
+        for num, rental in enumerate(one_user, start=1):
+            row = f"| {num:<{columns[0][1]}}"
+            row += f"| {rental['brand']+" "+rental['model']:<{columns[1][1]}}"
+            row += f"| {rental['days']:<{columns[2][1]}}"
+            row += f"| {rental['rental_date']:<{columns[3][1]}}"
+            row += f"| {rental['return_date']:<{columns[4][1]}}"
+            row += f"| {rental['total_cost']:<{columns[5][1]}}"
+            print(row + "|")
+        print()
+        self.enter_to_continue()
+        print("Returning back to user menu.....")
+        time.sleep(0.5)
+        return
+    #------------------------------------------------INFORMATION UPDATE--------------------------------------------
 
     def update_balance(self):
 
@@ -435,6 +510,11 @@ Rented Car ID: {self.car.car_id}
                 print(f"Error: {e}")
 
     def update_info(self, member=None):
+        print("=" * 30)
+        print("UPDATE INFORMATION")
+        print("=" * 30)
+        print()
+        print("Press q/Q at any time to quit")
         self.all_users = self.file_handler.load_from_file("users.txt")
         users = self.all_users
         while True:
@@ -445,7 +525,12 @@ Rented Car ID: {self.car.car_id}
                         password = self.password
                         user["password"] = password
 
-                        address = input("Enter your address: ")
+                        address = input("Enter your address: ").strip()
+                        if self.quit_choice(password):
+                            return
+                        if len(address) > 50:
+                            raise OverflowError("Address cannot be more than 50 characters")
+
                         if address != "":
                             user["address"] = address
                         else:
@@ -469,6 +554,11 @@ Rented Car ID: {self.car.car_id}
             except PasswordError as e:
                 print(f"Error: {e}")
 
+            except OverflowError as e:
+                print(f"Error: {e}")
+            except Exception as e:
+                print(f"Error: {e}")
+
 #---------------------------------------FEEDBACK-----------------------------------------------------------
 
     def write_feedback(self):
@@ -478,19 +568,40 @@ Rented Car ID: {self.car.car_id}
         print("=" * 30)
         print()
         print("We love to hear from you. Write your valuable feedback here please:")
+        print("Please keep a 50 words limit")
+        print()
+        print("Press q/Q at any time to quit")
+        print()
         while True:
             try:
-                feedback = input("Feedback: ")
+                feedback = input("Feedback: ").strip()
+                if feedback.isdigit():
+                    raise Exception("Feedback cannot be just an integer")
+
+                if self.quit_choice(feedback):
+                    return
+
+                if self.quit_choice(feedback):
+                    return
+
                 if not feedback:
-                    raise Exception("Feedback cannot be empty")
+                    raise ValueError("Feedback cannot be empty")
+
+                if len(feedback) > 50:
+                    OverflowError("Feedback cannot be more than 50 characters")
                 break
+
+            except ValueError as e:
+                print(f"Error: {e}")
+            except OverflowError as e:
+                print(f"Error: {e}")
             except Exception as e:
                 print(f"Error: {e}")
 
         feedback = {
             "name" : self.name,
             "email" : self.email,
-            "Feedback" : feedback,
+            "feedback" : feedback,
         }
 
         time.sleep(0.5)

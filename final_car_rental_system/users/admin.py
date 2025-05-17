@@ -1,6 +1,6 @@
 from .basic_user import User
 from file_handler.file_handler import FileHandler
-from exception_handling.Exceptions import WrongPasswordError, PasswordError, CarNotFoundError
+from exception_handling.Exceptions import WrongPasswordError, PasswordError, AlreadyRentedError
 from vehicle.car import Car
 import uuid
 import time
@@ -14,6 +14,8 @@ class Admin(User):
         self.car = Car(brand, model, seating_capacity, price_per_day, fuel_type, car_type,fuel_average, availability)
         self.cars = self.file_handler.load_from_file("cars.txt")
         self.available_cars = self.file_handler.load_from_file("available_cars.txt")
+
+#---------------------------------------------LOGIN AND ACCOUNT CREDENTIALS-----------------------------------
 
     def login(self):
         print("=" * 30)
@@ -67,6 +69,8 @@ class Admin(User):
                 print(f"Error: {e}")
 
         return False
+
+#-----------------------------------ADD NEW CAR FLEET--------------------------------------------------------
 
     def add_new_car_fleet(self,availability=True):
         print("=" * 30)
@@ -228,46 +232,7 @@ class Admin(User):
         time.sleep(0.5)
         print("Returning back to admin menu....")
 
-    def display_user_info(self):
-        users = self.file_handler.load_from_file("users.txt")
-        name = input("Enter username to check his details: ")
-        safe_name = name.replace(" ", "_")
-        one_user = self.file_handler.load_from_file(f"users/{safe_name}.txt")
-        while True:
-            try:
-                user_found = False
-                for user in users:
-                    if user["name"] == name:
-                        user_found = True
-                        print(f"""
-            {"=" * 30}
-                  USER BASIC INFORMATION
-            {"=" * 30}
-            Name : {user["name"]}
-            Address : {user["address"]}
-            Balance : {user["balance"]}
-            {"=" * 30}
-            """)
-
-                    print(f"""
-            {"=" * 30}
-                  USER RENTAL INFORMATION
-            {"=" * 30}""")
-                    for car in one_user:
-                        for key, value in car.items():
-                            print(f"{key} | {value}")
-                    print({"=" * 30})
-                    break
-
-                if not user_found:
-                    raise ValueError("User with this name does not exist")
-
-            except ValueError as e:
-                print("Error:",e)
-            except TypeError as e:
-                print("Error:",e)
-
-            return
+#----------------------------------------REMOVE CAR FLEET---------------------------------------------------
 
     def remove_car_fleet(self):
         print("=" * 30)
@@ -327,8 +292,303 @@ class Admin(User):
         print("Returning back to admin menu....")
         time.sleep(0.5)
 
-    def access_feedbacks(self):
-        feedbacks = self.file_handler.load_from_file("feedbacks.txt")
-        for feedback in feedbacks:
-            print(f"{feedback["Name"]} : {feedback['Feedback']}")
+    def remove_specific_car(self):
+        print("=" * 30)
+        print("REMOVE SPECIFIC CAR")
+        print("=" * 30)
+        print("Press q/Q at anytime to quit the process")
+        print()
 
+        self.cars = self.file_handler.load_from_file("cars.txt")
+        self.available_cars = self.file_handler.load_from_file("available_cars.txt")
+        car_found = False
+        while True:
+            try:
+                car_id = input("Enter car id of the car to be removed: ").strip()
+                if self.quit_choice(car_id):
+                    return
+                if not car_id:
+                    raise ValueError("Car id is required")
+                for car in self.cars:
+                    if car["car_id"] == car_id:
+                        car_found = True
+                        if not car["availability"]:
+                            raise AlreadyRentedError("This car is currently rented. It cannot be removed")
+                        self.cars.remove(car)
+                        self.available_cars = [car for car in self.available_cars if not car["car_id"] == car_id]
+                if not car_found:
+                    raise Exception("No car with this id found")
+
+                break
+            except ValueError as e:
+                print("Error:", e)
+            except AlreadyRentedError as e:
+                print("Error:", e)
+                print("Returning back to admin menu....")
+                time.sleep(0.5)
+                return
+            except Exception as e:
+                print("Error:", e)
+
+            self.file_handler.save_to_file(self.available_cars,"available_cars.txt")
+            self.file_handler.save_to_file(self.cars,"cars.txt")
+            print("Removing Car.....")
+            time.sleep(0.5)
+            print("Just a Moment.....")
+            time.sleep(0.5)
+            print("Returning back to admin menu....")
+            time.sleep(0.5)
+            return
+
+    def display_car_id(self):
+        print("=" * 30)
+        print("DISPLAY ALL CARs ID")
+        print("=" * 30)
+        print()
+
+        self.cars = self.file_handler.load_from_file("cars.txt")
+        columns = [
+            ("S.No.", 5), ("Brand", 15), ("Model", 15), ("Car ID", 40), ("Availability", 15)
+        ]
+        header = ""
+        for col_name, width in columns:
+            header += f"| {self.bold_italics}{col_name:<{width}}{self.reset}"
+        print(header + "|")
+
+        for num, car in enumerate(self.cars, start=1):
+            row = f"| {num:<{columns[0][1]}}"
+            row += f"| {car['brand']:<{columns[1][1]}}"
+            row += f"| {car['model']:<{columns[2][1]}}"
+            row += f"| {car['car_id']:<{columns[3][1]}}"
+            row += f"| {'Available' if car['availability'] else 'Not Available':<{columns[4][1]}}"
+            print(row + "|")
+
+        print()
+        self.enter_to_continue()
+        print("Returning back to admin menu....")
+        time.sleep(0.5)
+        return
+
+
+
+    #----------------------------------------ACCESS FEEDBACKS----------------------------------------------------
+
+    def access_feedbacks(self):
+        print("=" * 30)
+        print("FEEDBACKS")
+        print("=" * 30)
+        print()
+        feedbacks = self.file_handler.load_from_file("feedbacks.txt")
+        columns = [
+            ("S.No.", 5), ("Name", 20), ("Email", 25), ("Feedback", 55),
+        ]
+
+        header = ""
+        for col_name, width in columns:
+            header += f"|{self.bold_italics}{col_name:<{width}}{self.reset} "
+        print(header + "|")
+
+        for num, feedback in enumerate(feedbacks, start=1):
+            row = f"| {num:>{columns[0][1]}}"
+            row += f"|{feedback['name']:<{columns[1][1]}} "
+            row += f"|{feedback['email']:<{columns[2][1]}} "
+            row += f"|{feedback['feedback']:<{columns[3][1]}}"
+            print(row + "|")
+
+        self.enter_to_continue()
+        print("Returning back to admin menu....")
+        time.sleep(0.5)
+
+    def display_user_info(self):
+        print("=" * 30)
+        print("DISPLAY USER RENTAL HISTORY")
+        print("=" * 30)
+        print()
+        users = self.file_handler.load_from_file("users.txt")
+
+        email_found = False
+        print("Press q/Q at anytime to quit the process")
+        while True:
+            try:
+                self.email = input("Enter Email of User: ").strip()
+                if not self.email:
+                    raise ValueError("Email cannot be empty")
+                for user in users:
+                    if user["email"].lower() == self.email.lower():
+                        email_found = True
+                        self.name = user["name"]
+                        self.email = user["email"]
+                if not email_found:
+                    raise ValueError("No user with this email found")
+                break
+            except ValueError as e:
+                print("Error:", e)
+
+        safe_email = self.email.replace("@", "_at_").replace(".", "_dot_")
+        one_user = self.file_handler.load_from_file(f"users/{safe_email}.txt")
+
+        if not one_user:
+            print("User does not have a rental history yet")
+            self.enter_to_continue()
+            print("Returning back to admin menu....")
+            time.sleep(0.5)
+            return
+
+        columns = [
+            ("S.No.", 5), ("Car ID", 40), ("Brand", 15), ("Model", 15), ("Days", 5), ("Rental Date", 15),
+            ("Return Date", 15), ("Total Cost (PKR)", 20)
+        ]
+
+        print(f"{self.bold_italics}Name:{self.reset} {self.name}")
+        print(f"{self.bold_italics}Email:{self.reset} {self.email}")
+        print()
+        header = ""
+        for col_name, width in columns:
+            header += f"| {self.bold_italics}{col_name:<{width}}{self.reset}"
+        print(header + "|")
+
+        for num, rental in enumerate(one_user, start=1):
+            row = f"|{num:<{columns[0][1]}} "
+            row += f"|{rental['car_id']:<{columns[1][1]}} "
+            row += f"|{rental['brand']:<{columns[2][1]}} "
+            row += f"|{rental['model']:<{columns[3][1]}} "
+            row += f"|{rental['days']:<{columns[4][1]}} "
+            row += f"|{rental['rental_date']:<{columns[5][1]}} "
+            row += f"|{rental['return_date']:<{columns[6][1]}} "
+            row += f"|{rental['total_cost']:<{columns[7][1]}} "
+            print(row + "|")
+
+        self.enter_to_continue()
+        print("Returning back to admin menu....")
+        time.sleep(0.5)
+        return
+
+    def check_current_rentals(self):
+        print("=" * 30)
+        print("CHECK CURRENT RENTALS")
+        print("=" * 30)
+        print()
+
+        current_rentals = self.file_handler.load_from_file("rented_cars.txt")
+        if not current_rentals:
+            print("No car is rented right now")
+            print("Returning back to admin menu....")
+            time.sleep(0.5)
+            return
+
+        count_current_rentals = len(current_rentals)
+        print(f"{self.bold_italics}Current Rentals{self.reset}: {count_current_rentals}")
+        time.sleep(0.5)
+
+        columns = [
+            ("S.No.", 5), ("Name", 20), ("Email", 25), ("Car ID", 40), ("Brand", 15), ("Model", 15),
+            ("Rental Date", 15), ("Return Date", 15), ("Days", 5), ("Total Cost (PKR)", 15)
+        ]
+
+        header = ""
+        for col_name, width in columns:
+            header += f"| {self.bold_italics}{col_name:<{width}}{self.reset}"
+        print(header + "|")
+
+        for num, car in enumerate(current_rentals, start=1):
+            self.email = car["customer"]
+            row = f"| {num:<{columns[0][1]}}"
+            row += f"| {self.find_name(self.email):<{columns[1][1]}}"
+            row += f"| {car['customer']:<{columns[2][1]}}"
+            row += f"| {car['car_id']:<{columns[3][1]}}"
+            row += f"| {car['brand']:<{columns[4][1]}}"
+            row += f"| {car['model']:<{columns[5][1]}}"
+            row += f"| {car['rental_date']:<{columns[6][1]}}"
+            row += f"| {car['return_date']:<{columns[7][1]}}"
+            row += f"| {car['total_days']:<{columns[8][1]}}"
+            row += f"| {car['total_cost']:<{columns[9][1]}} "
+            print(row + "|")
+
+        self.enter_to_continue()
+        print("Returning back to admin menu....")
+        time.sleep(0.5)
+        return
+
+    def find_name(self, email):
+        users = self.file_handler.load_from_file("users.txt")
+
+        for user in users:
+            if email == user["email"]:
+                self.name = user["name"]
+
+        return self.name
+
+    def display_all_users(self):
+        print("=" * 30)
+        print("DISPLAY USER INFORMATION")
+        print("=" * 30)
+
+        users = self.file_handler.load_from_file("users.txt")
+        if not users:
+            print("No User found")
+            print("Returning back to admin menu....")
+            time.sleep(0.5)
+            return
+
+        columns = [
+            ("S.No.", 5), ("Name", 45), ("Email", 40), ("Address", 50), ("Balance (PKR)", 15), ("Rented Car", 15)
+        ]
+
+        header = ""
+        for col_name, width in columns:
+            header += f"| {self.bold_italics}{col_name:<{width}}{self.reset}"
+        print(header + "|")
+
+        for num, user in enumerate(users, start=1):
+            row = f"| {num:<{columns[0][1]}}"
+            row += f"| {user['name']:<{columns[1][1]}}"
+            row += f"| {user['email']:<{columns[2][1]}}"
+            row += f"| {user['address']:<{columns[3][1]}}"
+            row += f"| {user['balance']:<{columns[4][1]}}"
+            row += f"| {'Car Rented' if user['rented_car'] > 0 else 'No Car Rented':<{columns[5][1]}}"
+            print(row + "|")
+
+        self.enter_to_continue()
+        print("Returning back to admin menu....")
+        time.sleep(0.5)
+        return
+
+    def display_reserved_cars(self):
+        print("=" * 30)
+        print("DISPLAY RESERVED CARS")
+        print("=" * 30)
+        print()
+
+        cars_rented = self.file_handler.load_from_file("rented_cars.txt")
+        if not cars_rented:
+            print("No rented cars found")
+            print("Returning back to admin menu....")
+            time.sleep(0.5)
+            return
+
+        columns = [
+            ("S.No.", 5), ("Car Name", 20), ("Tenant Email", 40), ("Rental Date", 15), ("Return Date", 15), ("Days", 5),
+            ("Total Cost (PKR)", 20)
+        ]
+
+        # Display Header
+        header = ""
+        for col_name, width in columns:
+            header += f"| {self.bold_italics}{col_name:<{width}}{self.reset}"
+        print(header + "|")
+
+        # Display Rental Details
+        for num, rental in enumerate(cars_rented, start=1):
+            row = f"| {num:<{columns[0][1]}}"
+            row += f"| {rental['brand']+" "+rental['model']:<{columns[1][1]}}"
+            row += f"| {rental['customer']:<{columns[2][1]}}"
+            row += f"| {rental['rental_date']:<{columns[3][1]}}"
+            row += f"| {rental['return_date']:<{columns[4][1]}}"
+            row += f"| {rental['total_days']:<{columns[5][1]}}"
+            row += f"| {rental['total_cost']:<{columns[6][1]}}"
+            print(row + "|")
+        print()
+        self.enter_to_continue()
+        print("Returning back to admin menu....")
+        time.sleep(0.5)
+        return

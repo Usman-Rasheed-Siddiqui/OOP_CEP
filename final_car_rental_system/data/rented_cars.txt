@@ -1,2 +1,1 @@
 {'car_id': 'd12a3642-9e7f-4e47-8f1d-9e39b6f17b7f', 'customer': 'muhammad.qazi@example.com', 'brand': 'Audi', 'model': 'Q5', 'rental_date': '2025-05-17', 'return_date': '2025-05-24', 'total_days': 7, 'total_cost': 1260}
-{'car_id': '2e8cfa6b-14c6-41b3-8b5f-9cce3a1c5d12', 'customer': 'siddiqui.uas1@gmail.com', 'brand': 'Nissan', 'model': 'Sunny', 'rental_date': '2025-05-17', 'return_date': '2025-05-21', 'total_days': 4, 'total_cost': 160}

@@ -27,6 +27,15 @@ class Vehicle(ABC, FileHandler):
         while input("Press Enter to continue...") != "":
             print("Please just press Enter without typing anything.")
 
+    def quit_choice(self, choice):
+        """Check if user wants to quit (entered 'q' or 'Q')"""
+        if choice == "q" or choice == "Q":
+            print("Returning back to menu.....\n")
+            time.sleep(0.5)
+            return True
+        return False
+
+
     def display_all_vehicles(self):
         """To display info of all vehicles"""
         file_handler = FileHandler()
@@ -51,20 +60,20 @@ class Vehicle(ABC, FileHandler):
         # Display Header
         header = ""
         for col_name, width in columns:
-            header += f"| {self.bold_italics}{col_name:<{width}}{self.reset} "
+            header += f"| {self.bold_italics}{col_name:<{width}}{self.reset}"
         print(header + "|")
 
         # Display the available vehicles
         for num, (key, car) in enumerate(unique_cars.items(), start=1):
                 row = f"| {num:>{columns[0][1]}}"
-                row += f"| {car["brand"]:<{columns[1][1]}} "
-                row += f"| {car['model']:<{columns[2][1]}} "
-                row += f"| {car['seating_capacity']:<{columns[3][1]}} "
-                row += f"| {car['price_per_day']:<{columns[4][1]}} "
-                row += f"| {car['car_type']:<{columns[5][1]}} "
-                row += f"| {car['fuel_type']:<{columns[6][1]}} "
-                row += f"| {car['fuel_average']:<{columns[7][1]}} "
-                row += f"| {available_count[key]:<{columns[8][1]}} "
+                row += f"| {car["brand"]:<{columns[1][1]}}"
+                row += f"| {car['model']:<{columns[2][1]}}"
+                row += f"| {car['seating_capacity']:<{columns[3][1]}}"
+                row += f"| {car['price_per_day']:<{columns[4][1]}}"
+                row += f"| {car['car_type']:<{columns[5][1]}}"
+                row += f"| {car['fuel_type']:<{columns[6][1]}}"
+                row += f"| {car['fuel_average']:<{columns[7][1]}}"
+                row += f"| {available_count[key]:<{columns[8][1]}}"
                 print(row + "|")
 
         self.enter_to_continue()
