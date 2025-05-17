@@ -297,9 +297,15 @@ class Customer(User):
 
 # ----------------------------------------------USER INSPECTION--------------------------------------------
     def display_user_info(self):
+
         for user in self.all_users:
             try:
                 if user["name"].lower() == self.name.lower():
+                    for car in self.cars_rented:
+                        if user["name"].lower() == car["customer"].lower():
+                            user_car_id = car["car_id"]
+                        else:
+                            user_car_id = "No Car Rented Yet"
                     print (f"""
 {"="*30}
       USER INFORMATION
@@ -307,6 +313,7 @@ class Customer(User):
 Name : {user["name"]}
 Address : {user["address"]}
 Balance : {user["balance"]}
+Rented Car ID: {user_car_id}
 {"="*30}
 """)
                     self.enter_to_continue()

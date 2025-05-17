@@ -1,1 +1,1 @@
-{'car_id': 'e6906f7b-01db-4d71-ad8c-ac33dd750f2c', 'customer': 'Usman Siddiqui', 'brand': 'KIA', 'model': 'Sportage', 'rental_date': '2025-05-17', 'return_date': '2025-05-22', 'total_days': 5, 'total_cost': 3500}
+{'car_id': 'd12a3642-9e7f-4e47-8f1d-9e39b6f17b7f', 'customer': 'Muhammad Qazi', 'brand': 'Audi', 'model': 'Q5', 'rental_date': '2025-05-17', 'return_date': '2025-05-24', 'total_days': 7, 'total_cost': 1260}
