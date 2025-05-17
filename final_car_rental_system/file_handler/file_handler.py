@@ -23,12 +23,12 @@ class FileHandler:
             pass
         return data
 
-    def create_file(self, directory, name):
+    def create_file(self, directory, email):
         base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         sec_dir = os.path.join(base_dir, "data", directory)
 
-        safe_name = name.replace(" ", "_")
-        file = os.path.join(sec_dir, f"{safe_name}.txt")
+        safe_email = email.replace("@", "_at_").replace(".", "_dot_")
+        file = os.path.join(sec_dir, f"{safe_email}.txt")
 
         with open(file, 'w') as f:
             pass

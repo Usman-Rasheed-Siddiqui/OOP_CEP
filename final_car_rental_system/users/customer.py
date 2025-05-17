@@ -4,10 +4,11 @@ from rental_management.rental_manager import RentalManager
 from file_handler.file_handler import FileHandler
 from exception_handling.Exceptions import AlreadyRentedError, AccountNotFoundError, WrongPasswordError, PasswordError, CustomerNoRentsError
 import time
+from nanoid import generate
 
 class Customer(User):
-    def __init__(self, brand="",model="", first_name="", last_name="", password="", address="", balance=""):
-        super().__init__(first_name, last_name, password)
+    def __init__(self, brand="",model="", first_name="", last_name="", email="",password="", address="", balance=""):
+        super().__init__(first_name, last_name, email, password)
         self.car = Car(brand, model)
         self.address = address
         self.balance = balance
@@ -17,6 +18,7 @@ class Customer(User):
         self.rented_cars = 0
         self.name = ""
         self.safe_name = ""
+        self.safe_email = ""
 
 # ------------------------------------------------LOGIN AND SIGN UP-----------------------------------------
 
@@ -28,9 +30,9 @@ class Customer(User):
         if not super().login():
             return False
 
-        return self.password_check(self.name, self.password)
+        return self.password_check(self.email, self.password)
 
-    def password_check(self, name, password):
+    def password_check(self, email, password):
         attempts = 3
         self.all_users = self.file_handler.load_from_file("users.txt")
         self.cars_rented = self.file_handler.load_from_file("rented_cars.txt")
@@ -40,13 +42,14 @@ class Customer(User):
             password_match = False
             try:
                 for user in self.all_users:
-                    if user["name"].lower() == name.lower() and user["password"] == password:
+                    if user["email"].lower() == email.lower() and user["password"] == password:
                         user_found = True
                         password_match = True
+                        self.name = user["name"]
                         break
                 if user_found and password_match:
                     print("\nUsername and Password match!")
-                    print(f"Welcome onboard! Mr./Mrs. {name.upper()}!\n")
+                    print(f"Welcome onboard! Mr./Mrs. {self.name.upper()}!\n")
                     time.sleep(0.4)
                     return True
 
@@ -54,7 +57,7 @@ class Customer(User):
                     attempts -= 1
                     if attempts > 0:
                         print(f"\nPassword or User name mismatch. You have {attempts} left")
-                        name = input("Enter your name: ").strip()
+                        email = input("Enter your email: ").strip()
                         password = input("Enter your password: ").strip()
 
                     if attempts == 0:
@@ -105,15 +108,35 @@ class Customer(User):
 
         while True:
             try:
+                self.email = input("Enter your email: ").strip().lower()
+                if self.quit_choice(self.first_name):
+                    return False
+                if not self.email:
+                    raise ValueError("Email field is required")
+
+                self.validate_email(self.email)
+
+                for user in self.all_users:
+                    if user["email"] == self.email:
+                        raise ValueError("Email already registered")
+                break
+
+            except ValueError as e:
+                print("Error:",e)
+        while True:
+            try:
                 self.password = input("Enter your password: ").strip()
                 if self.quit_choice(self.first_name):
                     return False
+                for user in self.all_users:
+                    if user["password"] == self.password:
+                        raise PasswordError("Password already exists")
 
                 valid = self.validate_new_password(self.password)
                 if valid:
                     break
             except PasswordError as e:
-                print("Invalid Entry:",e)
+                print("Error:",e)
 
         while True:
             try:
@@ -156,6 +179,7 @@ class Customer(User):
 
         new_user = {
             "name": self.name,
+            "email": self.email,
             "password": self.password,
             "address": self.address,
             "balance": self.balance,
@@ -163,7 +187,7 @@ class Customer(User):
             }
 
         self.all_users.append(new_user)
-        self.file_handler.create_file("users", self.name)
+        self.file_handler.create_file("users", self.email)
         self.file_handler.save_to_file(self.all_users,"users.txt")
         print("Your account was successfully created!")
         print("Please login to your account to access it.")
@@ -175,7 +199,6 @@ class Customer(User):
     def check_rent(self, rented_car):
         if rented_car == 1:
             raise AlreadyRentedError("You already have a car rented\n")
-
 
     # RENTING
     def renting(self):
@@ -190,13 +213,13 @@ class Customer(User):
         self.cars_rented = self.file_handler.load_from_file("rented_cars.txt")
         users = self.all_users
         user_found = False
-        customer = self.name
+        customer = self.email
         try:
             for user in users:
-                if user["name"].lower() == customer.lower():
+                if user["email"].lower() == customer.lower():
                     user_found = True
-                    self.name = user["name"]
-                    customer = user["name"]
+                    self.email = user["email"]
+                    customer = user["email"]
                     self.check_rent(user["rented_car"])
 
             if not user_found:
@@ -217,8 +240,8 @@ class Customer(User):
         if self.quit_choice(model):
             return False
 
-        self.safe_name = customer.replace(" ", "_")
-        user_rental_history = self.file_handler.load_from_file(f"users/{self.safe_name}.txt")
+        self.safe_email = customer.replace("@", "_at_").replace(".", "_dot_")
+        user_rental_history = self.file_handler.load_from_file(f"users/{self.safe_email}.txt")
 
         rental_manager = RentalManager(brand, model)
         car = rental_manager.process_rental(customer)
@@ -236,13 +259,13 @@ class Customer(User):
                 }
 
         for user in users:
-            if user["name"].lower() == customer.lower():
+            if user["email"].lower() == customer.lower():
                 user["balance"] -= rental_manager.total_cost
                 user["rented_car"] = 1
 
                 user_rental_history.append(rent)
                 self.file_handler.save_to_file(users, "users.txt")
-                self.file_handler.save_to_file(user_rental_history, f"users/{self.safe_name}.txt")
+                self.file_handler.save_to_file(user_rental_history, f"users/{self.safe_email}.txt")
                 time.sleep(0.5)
                 print("Preparing your car....")
                 time.sleep(0.5)
@@ -267,7 +290,7 @@ class Customer(User):
         while True:
             try:
                 for car in car_rented:
-                    if car["customer"].lower() == self.name.lower():
+                    if car["customer"].lower() == self.email.lower():
                         car_found = True
                 if not car_found:
                     raise CustomerNoRentsError
@@ -284,7 +307,7 @@ class Customer(User):
             return
 
         rental_manager = RentalManager()
-        car = rental_manager.process_return(car_id, self.name)
+        car = rental_manager.process_return(car_id, self.email)
         if not car:
             return False
 
@@ -293,15 +316,15 @@ class Customer(User):
 
         users = self.all_users
         for user in users:
-            if user["name"].lower() == self.name.lower():
+            if user["email"].lower() == self.email.lower():
                 for rent_car in self.cars_rented:
-                    if rent_car["customer"].lower() == user["name"].lower():
+                    if rent_car["customer"].lower() == user["email"].lower():
                         self.car.brand = rent_car["brand"]
                         self.car.model = rent_car["model"]
 
                 user["balance"] -= rental_manager.penalty_amount
-                self.safe_name = user["name"].replace(" ", "_")
-                customer_user = self.file_handler.load_from_file(f"users/{self.safe_name}.txt")
+                self.safe_email = user["email"].replace("@", "_at_").replace(".", "_dot_")
+                customer_user = self.file_handler.load_from_file(f"users/{self.safe_email}.txt")
                 for car in customer_user:
                     if car["brand"].lower()== self.car.brand.lower():
                         if car["model"].lower()== self.car.model.lower():
@@ -334,9 +357,9 @@ class Customer(User):
 
         for user in self.all_users:
             try:
-                if user["name"].lower() == self.name.lower():
+                if user["email"].lower() == self.email.lower():
                     for car in self.cars_rented:
-                        if user["name"].lower() == car["customer"].lower():
+                        if user["email"].lower() == car["customer"].lower():
                             self.car.car_id = car["car_id"]
                         else:
                             self.car.car_id = "No Car Rented Yet"
@@ -345,12 +368,15 @@ class Customer(User):
       USER INFORMATION
 {"="*30}
 Name : {user["name"]}
+Email : {user["email"]}
 Address : {user["address"]}
 Balance : {f"{user["balance"]} PKR" if user["balance"] > 0 else f"{user["balance"]*-1} PKR With be deducted on next deposit"}
 Rented Car ID: {self.car.car_id}
 {"="*30}
 """)
                     self.enter_to_continue()
+                    print("Returning back to user menu.....")
+                    time.sleep(0.5)
             except ValueError:
                 print("An Error occurred. Please try again")
                 print("Returning back to user menu.....")
@@ -371,7 +397,7 @@ Rented Car ID: {self.car.car_id}
         while True:
             try:
                 for user in users:
-                    if user["name"].lower() == self.name.lower():
+                    if user["email"].lower() == self.email.lower():
                         balance = input("Enter your balance to be updated: ")
 
                         if self.quit_choice(balance):
@@ -414,7 +440,7 @@ Rented Car ID: {self.car.car_id}
         while True:
             try:
                 for user in users:
-                    if self.name.lower() == user["name"].lower():
+                    if self.email.lower() == user["email"].lower():
                         super().update_info(user)
                         password = self.password
                         user["password"] = password
@@ -462,7 +488,8 @@ Rented Car ID: {self.car.car_id}
                 print(f"Error: {e}")
 
         feedback = {
-            "Name" : self.name,
+            "name" : self.name,
+            "email" : self.email,
             "Feedback" : feedback,
         }
 

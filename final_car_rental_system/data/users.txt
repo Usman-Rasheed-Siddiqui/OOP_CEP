@@ -1,9 +1,10 @@
-{'name': 'Miles Morales', 'password': 'miles123', 'address': 'New York Street 6', 'balance': 30000, 'rented_car': 0}
-{'name': 'Huzaifa Hanif', 'password': 'huzaifa123', 'address': 'Nazimabad', 'balance': 49520, 'rented_car': 0}
-{'name': 'Abdur Rehman', 'password': 'ar123', 'address': 'Nazimabad', 'balance': 59280, 'rented_car': 0}
-{'name': 'Usman Siddiqui', 'password': 'usman@123', 'address': 'House R6', 'balance': 30980, 'rented_car': 0}
-{'name': 'Ayesha Affan Siddiqui', 'password': 'Ayesha@123', 'address': 'House R4', 'balance': 58500, 'rented_car': 0}
-{'name': 'Shuqran Rasheed Siddiqui', 'password': 'Shuqran@123', 'address': 'House 3', 'balance': 40000, 'rented_car': 0}
-{'name': 'Ayan Mansoor', 'password': 'ayan@123', 'address': 'house 67', 'balance': 70000, 'rented_car': 0}
-{'name': 'Alex Hales', 'password': 'hales@123', 'address': 'England', 'balance': 49450, 'rented_car': 0}
-{'name': 'Muhammad Qazi', 'password': 'qazi@123', 'address': 'NED Staff Colony', 'balance': 38940, 'rented_car': 1}
+{'name': 'Huzaifa Hanif', 'email': 'huzaifa.hanif@example.com', 'password': 'huzaifa123', 'address': 'Nazimabad', 'balance': 49520, 'rented_car': 0}
+{'name': 'Abdur Rehman', 'email': 'abdur.rehman@example.com', 'password': 'ar123', 'address': 'Nazimabad', 'balance': 59280, 'rented_car': 0}
+{'name': 'Ayesha Affan Siddiqui', 'email': 'ayesha.siddiqui@example.com', 'password': 'Ayesha@123', 'address': 'House R4', 'balance': 58500, 'rented_car': 0}
+{'name': 'Shuqran Rasheed Siddiqui', 'email': 'shuqran.siddiqui@example.com', 'password': 'Shuqran@123', 'address': 'House 3', 'balance': 40000, 'rented_car': 0}
+{'name': 'Ayan Mansoor', 'email': 'ayan.mansoor@example.com', 'password': 'ayan@123', 'address': 'house 67', 'balance': 70000, 'rented_car': 0}
+{'name': 'Alex Hales', 'email': 'alex.hales@example.com', 'password': 'hales@123', 'address': 'England', 'balance': 49450, 'rented_car': 0}
+{'name': 'Muhammad Qazi', 'email': 'muhammad.qazi@example.com', 'password': 'qazi@123', 'address': 'NED Staff Colony', 'balance': 38940, 'rented_car': 1}
+{'name': 'Harry Brook', 'email': 'harry.brook@example.com', 'user_id': '4BA8E58', 'password': 'harry@123', 'address': 'London', 'balance': 30000, 'rented_car': 0}
+{'name': 'Usman Siddiqui', 'email': 'siddiqui.uas1@gmail.com', 'password': 'usman@123', 'address': 'House R5', 'balance': 39390, 'rented_car': 1}
+{'name': 'Usman Siddiqui', 'email': 'usman@gmail.com', 'password': 'usman@12345', 'address': 'House R5', 'balance': 39920, 'rented_car': 0}

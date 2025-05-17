@@ -1,14 +1,18 @@
 from abc import ABC, abstractmethod
+
+from django.core.exceptions import ValidationError
+
 from exception_handling.Exceptions import PasswordError
-from re import search
+from re import search, match
 import time
 
 class User(ABC):
-    def __init__(self, first_name="", last_name="", password=""):
+    def __init__(self, first_name="", last_name="", password="", email=""):
         self.first_name = first_name
         self.last_name = last_name
         self.name = self.first_name+" "+self.last_name
         self.password = password
+        self.email = email
 
     @abstractmethod
     def display_user_info(self):
@@ -30,13 +34,28 @@ class User(ABC):
 
     def login(self):
         print("Press q/Q at any time to quit\n")
-        self.name = input("Enter your name: ").strip()
-        if self.quit_choice(self.name):
-            return False
+        while True:
+            try:
+                self.email = input("Enter your email: ").strip()
+                if self.quit_choice(self.email):
+                    return False
+                if not self.email:
+                    raise ValueError("Please enter a valid email")
+                break
+            except ValueError as e:
+                print("Error:", e)
 
-        self.password = input("Enter your password: ").strip()
-        if self.quit_choice(self.password):
-            return False
+
+        while True:
+            try:
+                self.password = input("Enter your password: ").strip()
+                if self.quit_choice(self.password):
+                        return False
+                if not self.password:
+                    raise ValueError("Please enter a password")
+                break
+            except ValueError as e:
+                print("Error:", e)
 
         return True
 
@@ -70,4 +89,11 @@ class User(ABC):
 
         if error:
             raise PasswordError(f"Password must contain: {", ".join(error)}")
+        return True
+
+    def validate_email(self, email):
+
+        pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+        if not match(pattern, email):
+            raise ValueError("Invalid email format. Example: user@example.com")
         return True

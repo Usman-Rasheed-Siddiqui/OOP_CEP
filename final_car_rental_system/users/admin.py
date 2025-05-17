@@ -48,8 +48,9 @@ class Admin(User):
         while attempts > 0:
             try:
                 for admin in self.admin_info:
-                    if self.name.lower() == admin["name"].lower():
+                    if self.email.lower() == admin["email"].lower():
                         if self.password == admin["password"]:
+                            self.name = admin["name"]
                             print("Password match!")
                             print(f"Welcome onboard! Mr.{self.name}")
                             return True
@@ -59,7 +60,7 @@ class Admin(User):
                             if attempts == 0:
                                 raise WrongPasswordError
                             print("Try again!")
-                            self.name = input("Enter your name: ")
+                            self.email = input("Enter your email: ")
                             self.password = input("Enter your password: ")
 
             except WrongPasswordError as e:
@@ -298,37 +299,33 @@ class Admin(User):
             except ValueError as e:
                 print("Error:", e)
 
-        rented_cars = self.file_handler.load_from_file("rented_cars.txt")
-        for car in rented_cars:
-            if car["brand"].lower() == self.car.brand.lower() and car["model"].lower() == self.car.model.lower():
-                print("Car fleet cannot be removed as one of the cars from this fleet is rented.")
-                time.sleep(0.5)
-                print("In case of a problem, try removing specific car")
-                self.enter_to_continue()
-                print("Returning to admin menu....")
-                time.sleep(0.5)
-
                 return
 
-            available_cars = self.available_cars
-            cars = self.cars
-            try:
-                for available_car in available_cars:
-                    if available_car["brand"].lower() == self.car.brand.lower() and available_car["model"].lower() == self.car.model.lower():
-                        available_cars.remove(available_car)
-                        for car in cars:
-                            if car["brand"].lower() == self.car.brand.lower() and car["model"].lower() == self.car.model.lower():
-                                    cars.remove(car)
-                        self.file_handler.save_to_file(cars, "cars.txt")
-                    raise CarNotFoundError("No car with this brand and model name found")
+        available_cars = self.available_cars
+        cars = self.cars
+        available_cars = [
+            car for car in available_cars
+            if not (car["brand"].lower() == self.car.brand.lower()
+                    and car["model"].lower() == self.car.model.lower())
+        ]
 
-            except CarNotFoundError as e:
-                print("Error:",e)
-                print("Returning back to admin menu....")
-                time.sleep(0.5)
-                return
+        cars = [
+            car for car in cars
+            if not (car["brand"].lower() == self.car.brand.lower()
+                    and car["model"].lower() == self.car.model.lower()
+                    and car["availability"])
+        ]
 
-            self.file_handler.save_to_file(available_cars,"available_cars.txt")
+
+        self.file_handler.save_to_file(available_cars,"available_cars.txt")
+        self.file_handler.save_to_file(cars,"cars.txt")
+        print("Please Note: Only those cars of the fleets will be removed")
+        print("if they are not rented. The rented ones can be removed later when returned")
+        time.sleep(0.5)
+        print("Cars successfully removed....")
+        self.enter_to_continue()
+        print("Returning back to admin menu....")
+        time.sleep(0.5)
 
     def access_feedbacks(self):
         feedbacks = self.file_handler.load_from_file("feedbacks.txt")

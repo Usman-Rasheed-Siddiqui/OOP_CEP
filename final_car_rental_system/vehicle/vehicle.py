@@ -39,6 +39,7 @@ class Vehicle(ABC, FileHandler):
 
         # Counting Availability of a Vehicle
         available_count = {}
+        unique_cars = {}
         for car in cars:
             if car["availability"]:
                 key = (car["brand"], car["model"])
@@ -46,6 +47,7 @@ class Vehicle(ABC, FileHandler):
                     available_count[key] += 1
                 else:
                     available_count[key] = 1
+                    unique_cars[key] = car
         # Display Header
         header = ""
         for col_name, width in columns:
@@ -53,9 +55,7 @@ class Vehicle(ABC, FileHandler):
         print(header + "|")
 
         # Display the available vehicles
-        for num, car in enumerate(cars, start=1):
-            if car["availability"]:
-                key = (car["brand"], car["model"])
+        for num, (key, car) in enumerate(unique_cars.items(), start=1):
                 row = f"| {num:>{columns[0][1]}}"
                 row += f"| {car["brand"]:<{columns[1][1]}} "
                 row += f"| {car['model']:<{columns[2][1]}} "

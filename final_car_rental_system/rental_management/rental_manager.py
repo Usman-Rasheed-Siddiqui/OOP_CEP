@@ -82,7 +82,7 @@ class RentalManager:
                     self.total_cost = self.days * car["price_per_day"]
                     try:
                         for user in users:
-                            if user["name"].lower() == customer.lower():
+                            if user["email"].lower() == customer.lower():
                                 if user["balance"] < self.total_cost:
                                     raise InsufficientBalanceError("Your balance is insufficient. Please update your balance to make a rent")
                     except InsufficientBalanceError as e:
@@ -146,7 +146,7 @@ class RentalManager:
             penalty = extra * days_difference
 
             for user in users:
-                if user["name"].lower() == customer.lower():
+                if user["email"].lower() == customer.lower():
                     if self.penalty_balance_comparision(user["balance"], penalty):
 
                         print("You have used the car more than the rental date")

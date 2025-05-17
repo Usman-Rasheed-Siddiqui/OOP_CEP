@@ -6,8 +6,5 @@
 {'car_id': '83af67e3-d84c-4219-b472-919cc2ae7761', 'brand': 'Hyundai', 'model': 'Creta', 'seating_capacity': 5, 'price_per_day': 75, 'car_type': 'SUV', 'fuel_type': 'Diesel', 'fuel_average': 15, 'availability': True}
 {'car_id': '4be8bc54-5a12-4c6f-97d4-c8d9d1a21e1d', 'brand': 'Mercedes', 'model': 'C-Class', 'seating_capacity': 5, 'price_per_day': 150, 'car_type': 'Sedan', 'fuel_type': 'Petrol', 'fuel_average': 14, 'availability': True}
 {'car_id': '9c79c0d1-5c2a-4b84-88c6-5a8c5a6a0e4e', 'brand': 'BMW', 'model': 'X5', 'seating_capacity': 7, 'price_per_day': 200, 'car_type': 'SUV', 'fuel_type': 'Diesel', 'fuel_average': 10, 'availability': True}
-{'car_id': '2e8cfa6b-14c6-41b3-8b5f-9cce3a1c5d12', 'brand': 'Nissan', 'model': 'Sunny', 'seating_capacity': 5, 'price_per_day': 40, 'car_type': 'Sedan', 'fuel_type': 'Petrol', 'fuel_average': 16, 'availability': True}
-{'car_id': 'e6906f7b-01db-4d71-ad8c-ac33dd750f2c', 'brand': 'KIA', 'model': 'Sportage', 'seating_capacity': '5', 'price_per_day': 700, 'car_type': 'SUV', 'fuel_type': 'Petrol', 'fuel_average': 11, 'availability': True}
-{'car_id': '10256e71-e12c-42bd-9bc8-d5e0cc6f594d', 'brand': 'KIA', 'model': 'Sportage', 'seating_capacity': '5', 'price_per_day': 700, 'car_type': 'SUV', 'fuel_type': 'Petrol', 'fuel_average': 11, 'availability': True}
-{'car_id': '6ca0e8ce-f6c8-41ab-a28e-edda81ca586d', 'brand': 'KIA', 'model': 'Sportage', 'seating_capacity': '5', 'price_per_day': 700, 'car_type': 'SUV', 'fuel_type': 'Petrol', 'fuel_average': 11, 'availability': True}
+{'car_id': '2e8cfa6b-14c6-41b3-8b5f-9cce3a1c5d12', 'brand': 'Nissan', 'model': 'Sunny', 'seating_capacity': 5, 'price_per_day': 40, 'car_type': 'Sedan', 'fuel_type': 'Petrol', 'fuel_average': 16, 'availability': False}
 {'car_id': 'd12a3642-9e7f-4e47-8f1d-9e39b6f17b7f', 'brand': 'Audi', 'model': 'Q5', 'seating_capacity': 5, 'price_per_day': 180, 'car_type': 'SUV', 'fuel_type': 'Petrol', 'fuel_average': 12, 'availability': False}
