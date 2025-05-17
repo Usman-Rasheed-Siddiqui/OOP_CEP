@@ -14,6 +14,12 @@ class User(ABC):
     def display_user_info(self):
         pass
 
+    @staticmethod
+    def enter_to_continue():
+        while input("Press Enter to continue...") != "":
+            print("Please just press Enter without typing anything.")
+
+
     def quit_choice(self, choice):
         """Check if user wants to quit (entered 'q' or 'Q')"""
         if choice == "q" or choice == "Q":
@@ -33,6 +39,22 @@ class User(ABC):
             return False
 
         return True
+
+    def update_info(self, member):
+        print("=" * 30)
+        print("UPDATE INFORMATION")
+        print("=" * 30)
+
+        print("Press q/Q at any time to quit")
+        print("If you don't want to change something, just press enter.")
+
+        self.password = input("Enter your new password (8+ characters): ").strip()
+        if self.password != "":
+            self.validate_new_password(self.password)
+            member["password"] = self.password
+        else:
+            self.password = member["password"]
+            member["password"] = self.password
 
     def validate_new_password(self, password):
         if len(password) < 8:

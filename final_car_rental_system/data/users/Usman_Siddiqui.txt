@@ -5,3 +5,4 @@
 {'car_id': 'bcf624d2-f258-4e83-ba84-617f25210bc4', 'brand': 'Toyota', 'model': 'Corolla', 'days': 4, 'rental_date': '2025-05-17', 'return_date': '2025-05-21', 'total_cost': 220}
 {'car_id': 'c9e4ed72-f71f-48d7-b79e-b13853ebd004', 'brand': 'Ford', 'model': 'Endeavour', 'days': 3, 'rental_date': '2025-05-08', 'return_date': '2025-05-14', 'total_cost': 0}
 {'car_id': 'c9e4ed72-f71f-48d7-b79e-b13853ebd004', 'brand': 'Ford', 'model': 'Endeavour', 'days': 3, 'rental_date': '2025-05-08', 'return_date': '2025-05-14', 'total_cost': 0}
+{'car_id': 'e6906f7b-01db-4d71-ad8c-ac33dd750f2c', 'brand': 'KIA', 'model': 'Sportage', 'days': 5, 'rental_date': '2025-05-17', 'return_date': '2025-05-22', 'total_cost': 3500}

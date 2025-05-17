@@ -83,6 +83,7 @@ class RentalManager:
                                     raise InsufficientBalanceError("Your balance is insufficient. Please update your balance to make a rent")
                     except InsufficientBalanceError as e:
                         print("Error:", e)
+                        return False
 
                     self.car_id = car["car_id"]
                     break

@@ -54,3 +54,6 @@ class PasswordError(Exception):
 
 class ChoiceError(Exception):
     pass
+
+class CarNotFoundError(Exception):
+    pass

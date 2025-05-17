@@ -1,1 +1,1 @@
-{'name': 'admin', 'password': 'admin@123'}
+{'name': 'admin', 'password': 'admin@12345'}

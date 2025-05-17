@@ -1,11 +1,11 @@
 from users.customer import Customer
 from vehicle.car import Car
-#from users.admin import Admin
+from users.admin import Admin
 import time
 
 class Interface:
     def __init__(self):
-        #self.admin = Admin()
+        self.admin = Admin()
         self.customer = Customer()
         self.car = Car()
 
@@ -54,9 +54,10 @@ class Interface:
                         return self.main_menu()
 
                 elif choice == "3":
-                    #self.admin.login()
-                    print("Service not Available")
-                    pass
+                    if self.admin.login():
+                        self.admin_menu()
+                    else:
+                        self.main_menu()
 
                 elif choice == "4":
                     print("Thank you for using OUR CAR RENTAL SYSTEM")
@@ -108,37 +109,37 @@ class Interface:
                         return self.user_menu()
                     self.user_menu()
 
-                if choice == "2":
+                elif choice == "2":
                     print("Press q/Q at anytime to quit.")
                     if not self.customer.returning():
                         return self.user_menu()
                     self.user_menu()
 
-                if choice == "3":
+                elif choice == "3":
                     self.customer.display_user_info()
                     self.user_menu()
 
-                if choice == "4":
+                elif choice == "4":
                     self.customer.update_balance()
                     self.user_menu()
 
-                if choice == "5":
+                elif choice == "5":
                     self.customer.update_info()
                     self.user_menu()
 
-                if choice == "6":
+                elif choice == "6":
                     self.car.display_all_vehicles()
                     self.user_menu()
 
-                if choice == "7":
+                elif choice == "7":
                     self.car.display_vehicle_info()
                     self.user_menu()
 
-                if choice == "8":
+                elif choice == "8":
                     self.customer.write_feedback()
                     self.user_menu()
 
-                if choice == "9":
+                elif choice == "9":
                     print("Returning back to main menu....\n")
                     self.main_menu()
 
@@ -156,3 +157,78 @@ class Interface:
             #  HANDLING: Invalid number entry
             except ValueError:
                 print("Please enter a number from 1 ----> 9")
+
+
+    def admin_menu(self):
+        """Display user menu and handle choices"""
+        self.admin_menu_interface()
+        self.choice_admin()
+
+    def admin_menu_interface(self):
+        print("=" * 30)
+        print(f"ADMIN's Dashboard")
+        print("=" * 30)
+        print("1. Add Car Fleet")
+        print("2. Remove Car Fleet")
+        print("3. Remove Specific Car")
+        print("4. Check Customers' Rentals")
+        print("5. Check Specific Customer Rental History")
+        print("6. Check Current Rentals")
+        print("7. Currently Reserved Cars")
+        print("8. View All Available Cars")
+        print("9. View Specific Car")
+        print("10. Access Feedbacks")
+        print("11. Update Password")
+        print("12. Exit")
+        print("=" * 30)
+        print("Please choose from the following options:")
+
+    def choice_admin(self):
+        while True:
+            print("Press q/Q at anytime to quit.")
+            try:
+                choice = input("\nEnter your choice here: ")
+
+                if choice == "1":
+                    self.admin.add_new_car_fleet()
+                    self.admin_menu()
+                elif choice == "2":
+                    self.admin.remove_car_fleet()
+                    self.admin_menu()
+                elif choice == "3":
+                    pass
+                elif choice == "4":
+                    pass
+                elif choice == "5":
+                    pass
+                elif choice == "6":
+                    pass
+                elif choice == "7":
+                    pass
+                elif choice == "8":
+                    pass
+                elif choice == "9":
+                    pass
+                elif choice == "10":
+                    pass
+                elif choice == "11":
+                    self.admin.update_info()
+                    self.admin_menu()
+                elif choice == "12":
+                    print("Returning back to main menu....\n")
+                    self.main_menu()
+
+                #  EXCEPTION: Invalid entry
+                if not choice.isdigit():
+                    raise TypeError
+                #  EXCEPTION: Invalid number entry
+                if int(choice) < 1 or int(choice) > 12:
+                    raise ValueError
+
+            #  HANDLING: Invalid entry
+            except TypeError:
+                print("Error: You did not enter a number. Please enter a number from 1 ----> 12")
+
+            #  HANDLING: Invalid number entry
+            except ValueError:
+                print("Please enter a number from 1 ----> 12")

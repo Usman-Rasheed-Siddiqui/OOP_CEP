@@ -1,4 +1,3 @@
-from vehicle.car import Car
 from .basic_user import User
 from rental_management.rental_manager import RentalManager
 from file_handler.file_handler import FileHandler
@@ -16,11 +15,6 @@ class Customer(User):
         self.rented_cars = 0
         self.name = ""
         self.safe_name = ""
-
-    @staticmethod
-    def enter_to_continue():
-        while input("Press Enter to continue...") != "":
-            print("Please just press Enter without typing anything.")
 
 # ------------------------------------------------LOGIN AND SIGN UP-----------------------------------------
 
@@ -230,34 +224,26 @@ class Customer(User):
                 "return_date" : rental_manager.return_date.strftime("%Y-%m-%d"),
                 "total_cost" : rental_manager.total_cost,
                 }
-        try:
-            for user in users:
-                if user["name"].lower() == customer.lower():
-                    if user["balance"] < rental_manager.total_cost:
-                       raise Exception("You don't have enough money to rent this car. Please update your balance and try again.")
 
-                    user["balance"] -= rental_manager.total_cost
-                    user["rented_car"] = 1
+        for user in users:
+            if user["name"].lower() == customer.lower():
+                user["balance"] -= rental_manager.total_cost
+                user["rented_car"] = 1
 
-                    user_rental_history.append(rent)
-                    self.file_handler.save_to_file(users, "users.txt")
-                    self.file_handler.save_to_file(user_rental_history, f"users/{self.safe_name}.txt")
-                    time.sleep(0.5)
-                    print("Preparing your car....")
-                    time.sleep(0.5)
-                    print("Getting it ready.....")
-                    time.sleep(0.5)
-                    print("\nYour Car was rented successfully!")
-                    rental_manager.print_receipt(self.name)
-                    self.enter_to_continue()
-                    print("Returning back to user menu.....")
-                    time.sleep(0.5)
+                user_rental_history.append(rent)
+                self.file_handler.save_to_file(users, "users.txt")
+                self.file_handler.save_to_file(user_rental_history, f"users/{self.safe_name}.txt")
+                time.sleep(0.5)
+                print("Preparing your car....")
+                time.sleep(0.5)
+                print("Getting it ready.....")
+                time.sleep(0.5)
+                print("\nYour Car was rented successfully!")
+                rental_manager.print_receipt(self.name)
+                self.enter_to_continue()
+                print("Returning back to user menu.....")
+                time.sleep(0.5)
 
-            return True
-
-        except Exception as e:
-            print(f"Error: {e}")
-            return False
 
     # RETURNING
     def returning(self):
@@ -380,26 +366,15 @@ Balance : {user["balance"]}
             except OverflowError as e:
                 print(f"Error: {e}")
 
-    def update_info(self):
-        print("=" * 30)
-        print("UPDATE INFORMATION")
-        print("=" * 30)
+    def update_info(self, member=None):
         users = self.all_users
-
-        print("Press q/Q at any time to quit")
-        print("If you don't want to change something, just press enter. Please do")
-        print("fill it out with any input")
         while True:
             try:
                 for user in users:
                     if self.name.lower() == user["name"].lower():
-                        password = input("Enter your password: ")
-                        if password != "":
-                            self.validate_new_password(password)
-                            user["password"] = password
-                        else:
-                            password = user["password"]
-                            user["password"] = password
+                        super().update_info(user)
+                        password = self.password
+                        user["password"] = password
 
                         address = input("Enter your address: ")
                         if address != "":

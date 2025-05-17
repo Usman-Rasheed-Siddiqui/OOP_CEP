@@ -9,3 +9,5 @@
 {'car_id': 'bcf624d2-f258-4e83-ba84-617f25210bc4', 'customer': None, 'brand': 'Toyota', 'model': 'Corolla', 'rental_data': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}
 {'car_id': 'c9e4ed72-f71f-48d7-b79e-b13853ebd004', 'customer': None, 'brand': 'Ford', 'model': 'Endeavour', 'rental_data': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}
 {'car_id': '83af67e3-d84c-4219-b472-919cc2ae7761', 'customer': None, 'brand': 'Hyundai', 'model': 'Creta', 'rental_data': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}
+{'car_id': '6ca0e8ce-f6c8-41ab-a28e-edda81ca586d', 'customer': None, 'brand': 'KIA', 'model': 'Sportage', 'rental_data': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}
+{'car_id': '10256e71-e12c-42bd-9bc8-d5e0cc6f594d', 'customer': None, 'brand': 'KIA', 'model': 'Sportage', 'rental_data': None, 'return_date': None, 'total_days': 0, 'total_cost': 0}

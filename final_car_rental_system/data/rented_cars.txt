@@ -1,0 +1,1 @@
+{'car_id': 'e6906f7b-01db-4d71-ad8c-ac33dd750f2c', 'customer': 'Usman Siddiqui', 'brand': 'KIA', 'model': 'Sportage', 'rental_date': '2025-05-17', 'return_date': '2025-05-22', 'total_days': 5, 'total_cost': 3500}
