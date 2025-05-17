@@ -146,9 +146,9 @@ class RentalManager:
 
                         print("You have used the car more than the rental date")
                         print("decided. We will charge extra amount....")
-                        time.sleep(0.4)
+                        time.sleep(0.5)
                         print(f"An amount of {penalty} PKR is being deducted from your balance.....")
-                        time.sleep(0.4)
+                        time.sleep(0.5)
 
         return penalty
 
@@ -160,7 +160,7 @@ class RentalManager:
             print("decided. We will charge extra amount....")
             time.sleep(0.5)
             print("Your balance is less than the penalty amount...")
-            time.sleep(0.4)
+            time.sleep(0.5)
             print(f"{penalty - balance} PKR will be deducted on the next deposit..")
             time.sleep(0.5)
         return
@@ -172,8 +172,6 @@ class RentalManager:
         rented_cars = self.rented_cars
         available_cars = self.available_cars
         cars = self.cars
-        safe_name = customer.replace(" ", "_")
-        user_rental_history = self.file_handler.load_from_file(f"users/{safe_name}.txt")
         users = self.users
         customer_found = False
         car_found = False
@@ -219,10 +217,6 @@ class RentalManager:
 
         available_cars.append(giveaway)
 
-        for car in user_rental_history:
-            if car["car_id"] == car_id:
-                car["total_cost"] = self.total_cost
-
         for car in cars:
             if car["car_id"] == giveaway["car_id"]:
                 car["availability"] = True
@@ -232,7 +226,6 @@ class RentalManager:
             if car["car_id"] == giveaway["car_id"]:
                 rented_cars.remove(car)
 
-        self.file_handler.save_to_file(user_rental_history, f"users/{safe_name}.txt")
         self.file_handler.save_to_file(available_cars, "available_cars.txt")
         self.file_handler.save_to_file(rented_cars, "rented_cars.txt")
         self.file_handler.save_to_file(cars, "cars.txt")

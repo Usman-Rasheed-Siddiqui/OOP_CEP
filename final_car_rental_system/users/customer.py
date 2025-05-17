@@ -12,9 +12,9 @@ class Customer(User):
         self.balance = balance
         self.file_handler = FileHandler()
         self.all_users = self.file_handler.load_from_file("users.txt")
+        self.cars_rented = self.file_handler.load_from_file("rented_cars.txt")
         self.rented_cars = 0
         self.name = ""
-        self.car = Car()
         self.safe_name = ""
 
     @staticmethod
@@ -200,6 +200,7 @@ class Customer(User):
 
         except AlreadyRentedError as e:
             print(f"Error: {e}")
+            self.enter_to_continue()
             return False
         except AccountNotFoundError as e:
             print(f"Error: {e}")
@@ -211,8 +212,6 @@ class Customer(User):
         model = input("Enter model you want to rent: ").strip()
         if self.quit_choice(model):
             return False
-
-        self.car = Car(brand, model)
 
         self.safe_name = customer.replace(" ", "_")
         user_rental_history = self.file_handler.load_from_file(f"users/{self.safe_name}.txt")
@@ -274,15 +273,22 @@ class Customer(User):
         if not car:
             return False
 
+
         users = self.all_users
         for user in users:
             if user["name"].lower() == self.name.lower():
+                for rent_car in self.cars_rented:
+                    if rent_car["customer"].lower() == user["name"].lower():
+                        brand = rent_car["brand"]
+                        model = rent_car["model"]
+
                 user["balance"] -= rental_manager.penalty_amount
+                self.safe_name = user["name"].replace(" ", "_")
                 customer_user = self.file_handler.load_from_file(f"users/{self.safe_name}.txt")
                 for car in customer_user:
-                    if car["brand"].lower()== self.car.brand.lower():
-                        if car["model"].lower()== self.car.model.lower():
-                            car["total cost"] -= rental_manager.penalty_amount
+                    if car["brand"].lower()== brand.lower():
+                        if car["model"].lower()== model.lower():
+                            car["total_cost"] -= rental_manager.penalty_amount
 
                 self.file_handler.save_to_file(customer_user, f"users/{self.safe_name}.txt")
 
