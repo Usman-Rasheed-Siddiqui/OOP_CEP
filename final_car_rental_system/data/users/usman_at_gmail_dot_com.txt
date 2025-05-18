@@ -1,4 +1,9 @@
-{'car_id': '2e8cfa6b-14c6-41b3-8b5f-9cce3a1c5d12', 'brand': 'Nissan', 'model': 'Sunny', 'days': 2, 'rental_date': '2025-05-17', 'return_date': '2025-05-19', 'total_cost': 80}
+{'car_id': '2e8cfa6b-14c6-41b3-8b5f-9cce3a1c5d12', 'brand': 'Nissan', 'model': 'Sunny', 'days': 2, 'rental_date': '2025-05-17', 'return_date': '2025-05-18', 'total_cost': 80}
 {'car_id': '2c026418-6111-4d4a-a91b-dffd2626ec7b', 'brand': 'Toyota', 'model': 'Corolla', 'days': 4, 'rental_date': '2025-05-18', 'return_date': '2025-05-22', 'total_cost': 220}
 {'car_id': '2c026418-6111-4d4a-a91b-dffd2626ec7b', 'brand': 'Toyota', 'model': 'Corolla', 'days': 5, 'rental_date': '2025-05-18', 'return_date': '2025-05-23', 'total_cost': 275}
 {'car_id': '0f23cdd9-557e-4b45-8c3f-a81ed3a542ee', 'brand': 'Kia', 'model': 'Sportage', 'days': 2, 'rental_date': '2025-05-18', 'return_date': '2025-05-20', 'total_cost': 24000}
+{'car_id': '9c79c0d1-5c2a-4b84-88c6-5a8c5a6a0e4e', 'brand': 'BMW', 'model': 'X5', 'days': 3, 'rental_date': '2025-05-18', 'return_date': '2025-05-21', 'total_cost': 90000}
+{'car_id': '3ac92c77-105a-4ef2-a501-e94ff6c0e4b1', 'brand': 'Tesla', 'model': 'Model 3', 'days': 3, 'rental_date': '2025-05-18', 'return_date': '2025-05-18', 'total_cost': 90000}
+{'car_id': 'c9e4ed72-f71f-48d7-b79e-b13853ebd004', 'brand': 'Ford', 'model': 'Endeavour', 'days': 3, 'rental_date': '2025-05-18', 'return_date': '2025-05-21', 'total_cost': 36000}
+{'car_id': '2e8cfa6b-14c6-41b3-8b5f-9cce3a1c5d12', 'brand': 'Nissan', 'model': 'Sunny', 'days': 2, 'rental_date': '2025-05-18', 'return_date': '2025-05-18', 'total_cost': 10000}
+{'car_id': '10ad3ff6-187f-4701-9601-33beb2e0bc59', 'brand': 'Suzuki', 'model': 'Cultus', 'days': 3, 'rental_date': '2025-05-13', 'return_date': '2025-05-18', 'total_cost': 12040}

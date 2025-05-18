@@ -1,6 +1,6 @@
 from .basic_user import User
 from file_handler.file_handler import FileHandler
-from exception_handling.Exceptions import WrongPasswordError, PasswordError, AlreadyRentedError
+from exception_handling.CustomExceptions import WrongPasswordError, PasswordError, AlreadyRentedError
 from vehicle.car import Car
 import uuid
 import time
@@ -19,7 +19,7 @@ class Admin(User):
 
     def login(self):
         print("=" * 30)
-        print("LOGIN ADMIN")
+        print("         LOGIN ADMIN")
         print("=" * 30)
         print()
         if not super().login():
@@ -36,7 +36,7 @@ class Admin(User):
                     admin["password"] = self.password
                 self.file_handler.save_to_file(self.admin_info, "admin_info.txt")
                 print("Information Updated successfully")
-                time.sleep(0.5)
+                self.enter_to_continue()
                 print("Returning back to admin menu....")
                 time.sleep(0.5)
                 break
@@ -59,15 +59,22 @@ class Admin(User):
                             return True
                         else:
                             attempts -= 1
-                            print(f"Password or name mismatch. You have {attempts} left")
+                            print(f"Password or name mismatch. You have {attempts} attempts left")
                             if attempts == 0:
                                 raise WrongPasswordError
                             print("Try again!")
                             self.email = input("Enter your email: ")
                             self.password = input("Enter your password: ")
 
+            except PasswordError as e:
+                print("Error:", e)
+
             except WrongPasswordError as e:
                 print(f"Error: {e}")
+                time.sleep(0.7)
+                print("Returning back to main menu....")
+                time.sleep(0.5)
+                return
 
         return False
 
@@ -75,7 +82,7 @@ class Admin(User):
 
     def add_new_car_fleet(self,availability=True):
         print("=" * 30)
-        print("ADD NEW FLEET")
+        print("        ADD NEW FLEET")
         print("=" * 30)
         print("Press q/Q at anytime to quit the process")
         print()
@@ -230,15 +237,16 @@ class Admin(User):
         time.sleep(0.5)
         print("New car was added successfully....")
         time.sleep(0.5)
-        time.sleep(0.5)
+        self.enter_to_continue()
         print("Returning back to admin menu....")
+        time.sleep(0.5)
 
 #----------------------------------------REMOVE CAR FLEET---------------------------------------------------
 
     def remove_car_fleet(self):
-        print("=" * 30)
-        print("REMOVE CAR FLEET")
-        print("=" * 30)
+        print("=" * 68)
+        print("                          REMOVE CAR FLEET")
+        print("=" * 68)
         print()
         self.cars = self.file_handler.load_from_file("cars.txt")
         if not self.cars:
@@ -376,14 +384,16 @@ class Admin(User):
             time.sleep(0.5)
             print("Just a Moment.....")
             time.sleep(0.5)
+            print("Car removed successfully....")
+            self.enter_to_continue()
             print("Returning back to admin menu....")
             time.sleep(0.5)
             return
 
     def display_car_id(self):
-        print("=" * 30)
-        print("DISPLAY ALL CARs ID")
-        print("=" * 30)
+        print("=" * 92)
+        print("                                     DISPLAY ALL CARs ID")
+        print("=" * 92)
         print()
 
         self.cars = self.file_handler.load_from_file("cars.txt")
@@ -414,9 +424,9 @@ class Admin(User):
     #----------------------------------------ACCESS FEEDBACKS----------------------------------------------------
 
     def access_feedbacks(self):
-        print("=" * 30)
-        print("FEEDBACKS")
-        print("=" * 30)
+        print("=" * 105)
+        print("                                                FEEDBACKS")
+        print("=" * 105)
         print()
         feedbacks = self.file_handler.load_from_file("feedbacks.txt")
         columns = [
@@ -440,9 +450,9 @@ class Admin(User):
         time.sleep(0.5)
 
     def display_user_info(self):
-        print("=" * 30)
-        print("DISPLAY USER RENTAL HISTORY")
-        print("=" * 30)
+        print("=" * 130)
+        print("                                                    DISPLAY USER RENTAL HISTORY")
+        print("=" * 130)
         print()
         users = self.file_handler.load_from_file("users.txt")
 
@@ -451,6 +461,9 @@ class Admin(User):
         while True:
             try:
                 self.email = input("Enter Email of User: ").strip()
+                if self.quit_choice(self.email):
+                    return
+
                 if not self.email:
                     raise ValueError("Email cannot be empty")
                 for user in users:
@@ -504,9 +517,9 @@ class Admin(User):
         return
 
     def check_current_rentals(self):
-        print("=" * 30)
-        print("CHECK CURRENT RENTALS")
-        print("=" * 30)
+        print("=" * 170)
+        print("                                                                          CHECK CURRENT RENTALS")
+        print("=" * 170)
         print()
 
         current_rentals = self.file_handler.load_from_file("rented_cars.txt")
@@ -559,9 +572,9 @@ class Admin(User):
         return self.name
 
     def display_all_users(self):
-        print("=" * 30)
-        print("DISPLAY USER INFORMATION")
-        print("=" * 30)
+        print("=" * 170)
+        print("                                                                         DISPLAY USER INFORMATION")
+        print("=" * 170)
 
         users = self.file_handler.load_from_file("users.txt")
         if not users:
@@ -594,9 +607,9 @@ class Admin(User):
         return
 
     def display_reserved_cars(self):
-        print("=" * 30)
-        print("DISPLAY RESERVED CARS")
-        print("=" * 30)
+        print("=" * 120)
+        print("                                                 DISPLAY RESERVED CARS")
+        print("=" * 120)
         print()
 
         cars_rented = self.file_handler.load_from_file("rented_cars.txt")

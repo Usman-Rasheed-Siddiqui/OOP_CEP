@@ -38,9 +38,9 @@ class Vehicle(ABC, FileHandler):
 
     def display_all_vehicles(self):
         """To display info of all vehicles"""
-        print("=" * 30)
-        print("ALL AVAILABLE VEHICLES")
-        print("=" * 30)
+        print("=" * 105)
+        print("                                         ALL AVAILABLE VEHICLES")
+        print("=" * 105)
         print()
 
         file_handler = FileHandler()

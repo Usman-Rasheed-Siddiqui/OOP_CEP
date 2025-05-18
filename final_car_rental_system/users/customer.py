@@ -2,7 +2,7 @@ from .basic_user import User
 from vehicle.car import Car
 from rental_management.rental_manager import RentalManager
 from file_handler.file_handler import FileHandler
-from exception_handling.Exceptions import AlreadyRentedError, AccountNotFoundError, WrongPasswordError, PasswordError, CustomerNoRentsError
+from exception_handling.CustomExceptions import AlreadyRentedError, AccountNotFoundError, WrongPasswordError, PasswordError, CustomerNoRentsError
 import time
 
 class Customer(User):
@@ -16,14 +16,12 @@ class Customer(User):
         self.cars_rented = self.file_handler.load_from_file("rented_cars.txt")
         self.rented_cars = 0
         self.name = ""
-        self.safe_name = ""
         self.safe_email = ""
-
 # ------------------------------------------------LOGIN AND SIGN UP-----------------------------------------
 
     def login(self):
         print("=" * 30)
-        print("Login")
+        print("            Login")
         print("=" * 30)
         print()
         if not super().login():
@@ -70,7 +68,7 @@ class Customer(User):
 
     def create_an_account(self):
         print("=" * 30)
-        print("Create an Account")
+        print("      Create an Account")
         print("=" * 30)
         print()
         print("Press q/Q at any time to quit\n")
@@ -173,10 +171,10 @@ class Customer(User):
                 if not self.balance.isdigit():
                     raise ValueError("Balance must be an integer")
                 self.balance = int(self.balance)
-                if self.balance < 20000:
-                    raise ValueError("Balance must be greater than 20000 PKR")
-                if self.balance > 200000:
-                    raise OverflowError("Balance can be at most 200000 PKR")
+                if self.balance < 5000:
+                    raise ValueError("Balance must be greater than 5000 PKR")
+                if self.balance > 1000000:
+                    raise OverflowError("Balance can be at most 1000000 PKR")
                 break
 
             except ValueError as e:
@@ -212,9 +210,9 @@ class Customer(User):
 
     # RENTING
     def renting(self):
-        print("="*30)
-        print("RENTING")
-        print("="*30)
+        print("="*67)
+        print("                              RENTING")
+        print("="*67)
         print()
 
         self.all_users = self.file_handler.load_from_file("users.txt")
@@ -272,10 +270,10 @@ class Customer(User):
             print(f"Error: {e}")
             return False
 
-        brand = input("Enter brand you want to rent: ").strip()
+        brand = input("Enter brand name you want to rent: ").strip()
         if self.quit_choice(brand):
             return
-        model = input("Enter model you want to rent: ").strip()
+        model = input("Enter model name you want to rent: ").strip()
         if self.quit_choice(model):
             return
 
@@ -285,6 +283,9 @@ class Customer(User):
         rental_manager = RentalManager(brand, model)
         car = rental_manager.process_rental(customer)
         if not car:
+            self.enter_to_continue()
+            print("Returning back to menu.....\n")
+            time.sleep(0.5)
             return False
 
         rent = {
@@ -324,7 +325,7 @@ class Customer(User):
     # RETURNING
     def returning(self):
         print("=" * 30)
-        print("RETURNING")
+        print("          RETURNING")
         print("=" * 30)
         print()
         car_rented = self.file_handler.load_from_file("rented_cars.txt")
@@ -344,23 +345,26 @@ class Customer(User):
                 print("Returning back to user menu.....")
                 time.sleep(0.5)
                 return
-
+        print("Press q/Q at anytime to quit.")
         car_id = input("Enter car id: ").strip()
         if self.quit_choice(car_id):
             return
 
         rental_manager = RentalManager()
-        car = rental_manager.process_return(car_id, self.email)
-        if not car:
+        car_giveaway = rental_manager.process_return(car_id, self.email)
+        if not car_giveaway:
+            self.enter_to_continue()
+            print("Returning back to menu.....\n")
+            time.sleep(0.5)
             return False
 
         self.all_users = self.file_handler.load_from_file("users.txt")
-        self.cars_rented = self.file_handler.load_from_file("rented_cars.txt")
+        car_history = self.file_handler.load_from_file("cars_rental_history.txt")
 
         users = self.all_users
         for user in users:
             if user["email"].lower() == self.email.lower():
-                for rent_car in self.cars_rented:
+                for rent_car in car_rented:
                     if rent_car["customer"].lower() == user["email"].lower():
                         self.car.brand = rent_car["brand"]
                         self.car.model = rent_car["model"]
@@ -368,16 +372,31 @@ class Customer(User):
                 user["balance"] -= rental_manager.penalty_amount
                 self.safe_email = user["email"].replace("@", "_at_").replace(".", "_dot_")
                 customer_user = self.file_handler.load_from_file(f"users/{self.safe_email}.txt")
+
                 for car in customer_user:
                     if car["brand"].lower()== self.car.brand.lower():
                         if car["model"].lower()== self.car.model.lower():
-                            car["total_cost"] -= rental_manager.penalty_amount
+                            car["total_cost"] += rental_manager.penalty_amount
+                            car["return_date"] = rental_manager.actual_date.strftime("%Y-%m-%d")
 
+                for car in car_history:
+                    if car["brand"].lower()== self.car.brand.lower():
+                        if car["model"].lower()== self.car.model.lower():
+                            car["total_cost"] += rental_manager.penalty_amount
+                            car["return_date"] = rental_manager.actual_date.strftime("%Y-%m-%d")
+
+                self.file_handler.save_to_file(car_history, "cars_rental_history.txt")
                 self.file_handler.save_to_file(customer_user, f"users/{self.safe_email}.txt")
 
                 user["rented_car"] = 0
                 break
 
+        for car in car_rented:
+            if car["car_id"] == car_giveaway["car_id"]:
+                car_rented.remove(car)
+                break
+
+        self.file_handler.save_to_file(car_rented, "rented_cars.txt")
         self.file_handler.save_to_file(users, f"users.txt")
 
         print("Preparing to take your car...")
@@ -410,16 +429,16 @@ class Customer(User):
                             self.car.brand = "No Car"
                             self.car.model = "Rented Yet"
                     print (f"""
-{"="*30}
-      USER INFORMATION
-{"="*30}
+{"="*51}
+                 USER INFORMATION
+{"="*51}
 {self.bold_italics}Name{self.reset} : {user["name"]}
 {self.bold_italics}Email{self.reset} : {user["email"]}
 {self.bold_italics}Address{self.reset} : {user["address"]}
-{self.bold_italics}Balance{self.reset} : {f"{user["balance"]} PKR" if user["balance"] > 0 else f"{user["balance"]*-1} PKR With be deducted on next deposit"}
+{self.bold_italics}Balance{self.reset} : {f"{user["balance"]} PKR" if user["balance"] > 0 else f"{user["balance"]*-1} PKR will be deducted on next deposit"}
 {self.bold_italics}Rented Car Name{self.reset}: {self.car.brand} {self.car.model}
 {self.bold_italics}Rented Car ID{self.reset}: {self.car.car_id}
-{"="*30}
+{"="*51}
 """)
                     self.enter_to_continue()
                     print("Returning back to user menu.....")
@@ -431,9 +450,9 @@ class Customer(User):
                 return
 
     def user_rental_history(self):
-        print("=" * 30)
-        print("USER RENTAL HISTORY")
-        print("=" * 30)
+        print("=" * 60)
+        print("                    USER RENTAL HISTORY")
+        print("=" * 60)
         print()
         self.all_users = self.file_handler.load_from_file("users.txt")
         user_found = False
@@ -491,7 +510,7 @@ class Customer(User):
     def update_balance(self):
 
         print("=" * 30)
-        print("BALANCE UPDATE")
+        print("        BALANCE UPDATE")
         print("=" * 30)
         print("Press q/Q at any time to quit")
         print()
@@ -514,11 +533,11 @@ class Customer(User):
                         if balance <= 0:
                             raise ValueError("Balance must be greater than 0")
 
-                        if user["balance"] + balance < 20000:
-                            raise ValueError("Balance must be greater than 20000 PKR")
+                        if user["balance"] + balance < 5000:
+                            raise ValueError("Balance must be greater than 5000 PKR")
 
-                        if user["balance"] + balance > 200000:
-                            raise OverflowError("Balance can be at most 200000 PKR")
+                        if user["balance"] + balance > 1000000:
+                            raise OverflowError("Balance can be at most 1000000 PKR")
 
                         if user["balance"] < 0:
                             print(f"{-1 * user["balance"]} PKR will be deducted from your deposit")
@@ -527,7 +546,7 @@ class Customer(User):
                         self.file_handler.save_to_file(users, "users.txt")
                         print("Balance updated successfully!")
                         print(f"Updated balance: {user['balance']} PKR")
-                        time.sleep(0.5)
+                        self.enter_to_continue()
                         print("Returning back to user menu.....")
                         time.sleep(0.5)
                         return
@@ -570,7 +589,7 @@ class Customer(User):
                 print("Saving your information....")
                 time.sleep(0.5)
                 print("Information updated successfully!")
-                time.sleep(0.5)
+                self.enter_to_continue()
                 print("Returning back to user menu.....")
                 time.sleep(0.5)
                 return
@@ -588,7 +607,7 @@ class Customer(User):
     def write_feedback(self):
         feedbacks = self.file_handler.load_from_file("feedbacks.txt")
         print("=" * 30)
-        print("FEEDBACK")
+        print("           FEEDBACK")
         print("=" * 30)
         print()
         print("We love to hear from you. Write your valuable feedback here please:")
@@ -628,10 +647,11 @@ class Customer(User):
             "feedback" : feedback,
         }
 
-        time.sleep(0.5)
-        print("Thank you for your feedback!.....")
-        time.sleep(0.5)
-        print("Returning back to user menu.....")
-        time.sleep(0.5)
         feedbacks.append(feedback)
         self.file_handler.save_to_file(feedbacks, "feedbacks.txt")
+        time.sleep(0.5)
+        print("Thank you for your feedback!.....")
+        self.enter_to_continue()
+        print("Returning back to user menu.....")
+        time.sleep(0.5)
+

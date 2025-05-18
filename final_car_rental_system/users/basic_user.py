@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from exception_handling.Exceptions import PasswordError
+from exception_handling.CustomExceptions import PasswordError
 from re import search, match
 import time
 
@@ -60,7 +60,7 @@ class User(ABC):
 
     def update_info(self, member):
         print("=" * 30)
-        print("UPDATE INFORMATION")
+        print("      UPDATE INFORMATION")
         print("=" * 30)
         print("\nPress q/Q at any time to quit")
         print("If you don't want to change something, just press enter.")

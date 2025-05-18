@@ -1,6 +1,6 @@
 from .vehicle import Vehicle
 from file_handler.file_handler import FileHandler
-from exception_handling.Exceptions import CarNotAvailableError
+from exception_handling.CustomExceptions import CarNotAvailableError
 import time
 
 class Car(Vehicle):
@@ -24,9 +24,9 @@ class Car(Vehicle):
 #-----------------------------------VEHICLE INSPECTION------------------------------------------------------
 
     def display_vehicle_info(self):
-        print("=" * 30)
-        print("ALL AVAILABLE VEHICLES")
-        print("=" * 30)
+        print("=" * 68)
+        print("                       ALL AVAILABLE VEHICLES")
+        print("=" * 68)
         print()
 
         file_handler = FileHandler()
@@ -90,18 +90,18 @@ class Car(Vehicle):
                     raise CarNotAvailableError
 
                 print(f"""
-{"=" * 25}    
-    CAR INFORMATION
-{"=" * 25}
+{"=" * 30}    
+        CAR INFORMATION
+{"=" * 30}
 {self.bold_italics}Car{self.reset} : {brand} {model}
 {self.bold_italics}Car Type: {type}
-{"=" * 25}
+{"=" * 30}
 {self.bold_italics}Seating Capacity{self.reset} : {seating_capacity}
 {self.bold_italics}Price/Day{self.reset} : {price_per_day} PKR
 {self.bold_italics}Fuel Type{self.reset} : {fuel_type}
 {self.bold_italics}Fuel Average{self.reset} : {fuel_average}
 {self.bold_italics}Available Cars{self.reset} : {count}
-{"=" * 25}""")
+{"=" * 30}""")
                 self.enter_to_continue()
                 print("Returning back to user menu....")
                 time.sleep(0.5)
@@ -113,9 +113,9 @@ class Car(Vehicle):
                 print("Error:",e)
 
     def cars_rental_history(self):
-        print("=" * 30)
-        print("CARS RENTAL HISTORY")
-        print("=" * 30)
+        print("=" * 68)
+        print("                         CARS RENTAL HISTORY")
+        print("=" * 68)
         print()
         print("Press q/Q at anytime to quit")
         print()
@@ -165,6 +165,8 @@ class Car(Vehicle):
                 ("S.No.", 5), ("Car ID", 40), ("Rental Date", 15), ("Return Date", 15)
             ]
 
+            print()
+            print()
             print()
             print(f"{self.bold_italics}Car Name:{self.reset} {self.brand} {self.model}")
             header = ""

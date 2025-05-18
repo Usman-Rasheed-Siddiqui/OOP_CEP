@@ -1,2 +1,4 @@
 {'car_id': '4be8bc54-5a12-4c6f-97d4-c8d9d1a21e1d', 'brand': 'Mercedes', 'model': 'C-Class', 'days': 3, 'rental_date': '2025-05-17', 'return_date': '2025-05-20', 'total_cost': 450}
 {'car_id': '2e8cfa6b-14c6-41b3-8b5f-9cce3a1c5d12', 'brand': 'Nissan', 'model': 'Sunny', 'days': 4, 'rental_date': '2025-05-17', 'return_date': '2025-05-21', 'total_cost': 160}
+{'car_id': '0d7226a5-163b-41a8-a856-f21fad0e27fb', 'brand': 'Honda', 'model': 'BR-V', 'days': 3, 'rental_date': '2025-05-13', 'return_date': '2025-05-18', 'total_cost': 27040}
+{'car_id': '3ac92c77-105a-4ef2-a501-e94ff6c0e4b1', 'brand': 'Tesla', 'model': 'Model 3', 'days': 3, 'rental_date': '2025-05-18', 'return_date': '2025-05-21', 'total_cost': 90000}
