@@ -62,11 +62,10 @@ class User(ABC):
         print("=" * 30)
         print("UPDATE INFORMATION")
         print("=" * 30)
-        print()
-        print("Press q/Q at any time to quit")
+        print("\nPress q/Q at any time to quit")
         print("If you don't want to change something, just press enter.")
+        print("\nNote: Name and Email cannot be Modified")
         print()
-
         self.password = input("Enter your new password (8+ characters): ").strip()
         if self.quit_choice(self.password):
             return

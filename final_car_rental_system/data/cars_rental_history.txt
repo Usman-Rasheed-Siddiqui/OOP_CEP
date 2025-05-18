@@ -4,3 +4,6 @@
 {'car_id': '2e8cfa6b-14c6-41b3-8b5f-9cce3a1c5d12', 'brand': 'Nissan', 'model': 'Sunny', 'days': 6, 'rental_date': '2025-05-08', 'return_date': '2025-05-14', 'total_cost': -80}
 {'car_id': '83af67e3-d84c-4219-b472-919cc2ae7761', 'brand': 'Hyundai', 'model': 'Creta', 'days': 4, 'rental_date': '2025-05-08', 'return_date': '2025-05-14', 'total_cost': 240}
 {'car_id': '2c026418-6111-4d4a-a91b-dffd2626ec7b', 'brand': 'Toyota', 'model': 'Corolla', 'days': 4, 'rental_date': '2025-05-18', 'return_date': '2025-05-22', 'total_cost': 220}
+{'car_id': '2c026418-6111-4d4a-a91b-dffd2626ec7b', 'brand': 'Toyota', 'model': 'Corolla', 'days': 5, 'rental_date': '2025-05-18', 'return_date': '2025-05-23', 'total_cost': 275}
+{'car_id': '0f23cdd9-557e-4b45-8c3f-a81ed3a542ee', 'brand': 'Kia', 'model': 'Sportage', 'days': 2, 'rental_date': '2025-05-18', 'return_date': '2025-05-20', 'total_cost': 24000}
+{'car_id': '034b7a4c-6918-4a11-8d31-d32f599ee91f', 'brand': 'Toyota', 'model': 'Yaris', 'days': 3, 'rental_date': '2025-05-18', 'return_date': '2025-05-21', 'total_cost': 18000}

@@ -175,8 +175,8 @@ class Customer(User):
                 self.balance = int(self.balance)
                 if self.balance < 20000:
                     raise ValueError("Balance must be greater than 20000 PKR")
-                if self.balance > 50000:
-                    raise OverflowError("Balance can be at most 50000 PKR")
+                if self.balance > 200000:
+                    raise OverflowError("Balance can be at most 200000 PKR")
                 break
 
             except ValueError as e:
@@ -216,12 +216,34 @@ class Customer(User):
         print("RENTING")
         print("="*30)
         print()
-        print("Press q/Q at anytime to quit.")
-        print()
 
         self.all_users = self.file_handler.load_from_file("users.txt")
         self.cars_rented = self.file_handler.load_from_file("rented_cars.txt")
         rental_history = self.file_handler.load_from_file("cars_rental_history.txt")
+
+        cars = self.file_handler.load_from_file("cars.txt")
+        if not cars:
+            print("No cars available right now.")
+            self.enter_to_continue()
+            print("Returning back to menu.....\n")
+            time.sleep(0.5)
+            return
+
+        true_cars = [car for car in cars if car["availability"]]
+        if not true_cars:
+            print("No cars available right now.")
+            self.enter_to_continue()
+            print("Returning back to menu.....\n")
+            time.sleep(0.5)
+            return
+
+        available_cars = self.file_handler.load_from_file("available_cars.txt")
+        if not available_cars:
+            print("No Cars Available To Rent")
+            self.enter_to_continue()
+            print("Returning back to user menu.....")
+            time.sleep(0.5)
+            return
 
         users = self.all_users
         user_found = False
@@ -233,6 +255,10 @@ class Customer(User):
                     self.email = user["email"]
                     customer = user["email"]
                     self.check_rent(user["rented_car"])
+                    self.car.display_available_cars_names()
+                    print()
+                    print("Press q/Q at anytime to quit.")
+                    print()
 
             if not user_found:
                 raise AccountNotFoundError
@@ -491,8 +517,8 @@ class Customer(User):
                         if user["balance"] + balance < 20000:
                             raise ValueError("Balance must be greater than 20000 PKR")
 
-                        if user["balance"] + balance > 50000:
-                            raise OverflowError("Balance can be at most 50000 PKR")
+                        if user["balance"] + balance > 200000:
+                            raise OverflowError("Balance can be at most 200000 PKR")
 
                         if user["balance"] < 0:
                             print(f"{-1 * user["balance"]} PKR will be deducted from your deposit")
@@ -512,11 +538,7 @@ class Customer(User):
                 print(f"Error: {e}")
 
     def update_info(self, member=None):
-        print("=" * 30)
-        print("UPDATE INFORMATION")
-        print("=" * 30)
-        print()
-        print("Press q/Q at any time to quit")
+
         self.all_users = self.file_handler.load_from_file("users.txt")
         users = self.all_users
         while True:

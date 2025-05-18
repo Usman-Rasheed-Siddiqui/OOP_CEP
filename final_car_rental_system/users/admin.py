@@ -55,6 +55,7 @@ class Admin(User):
                             self.name = admin["name"]
                             print("Password match!")
                             print(f"Welcome onboard! Mr.{self.name}")
+                            time.sleep(0.5)
                             return True
                         else:
                             attempts -= 1
@@ -238,11 +239,35 @@ class Admin(User):
         print("=" * 30)
         print("REMOVE CAR FLEET")
         print("=" * 30)
-        print("Press q/Q at anytime to quit the process")
         print()
         self.cars = self.file_handler.load_from_file("cars.txt")
-        self.available_cars = self.file_handler.load_from_file("available_cars.txt")
+        if not self.cars:
+            print("No cars available right now.")
+            self.enter_to_continue()
+            print("Returning back to menu.....\n")
+            time.sleep(0.5)
+            return
 
+        true_car = [car for car in self.cars if car["availability"]]
+        if not true_car:
+            print("No cars available right now.")
+            self.enter_to_continue()
+            print("Returning back to menu.....\n")
+            time.sleep(0.5)
+            return
+
+        self.available_cars = self.file_handler.load_from_file("available_cars.txt")
+        if not self.available_cars:
+            print("No cars available right now.")
+            self.enter_to_continue()
+            print("Returning back to menu.....\n")
+            time.sleep(0.5)
+            return
+
+        self.car.display_available_cars_names()
+        print()
+        print("Press q/Q at anytime to quit the process")
+        print()
         while True:
             try:
                 self.car.brand = input("Enter brand name: ").strip()
@@ -300,7 +325,22 @@ class Admin(User):
         print()
 
         self.cars = self.file_handler.load_from_file("cars.txt")
+        true_cars = [car for car in self.cars if car["availability"]]
+        if not true_cars:
+            print("No available cars were found to be removed")
+            self.enter_to_continue()
+            print("Returning back to admin menu....")
+            time.sleep(0.5)
+            return
+
         self.available_cars = self.file_handler.load_from_file("available_cars.txt")
+        if not self.available_cars:
+            print("No available cars were found to be removed")
+            self.enter_to_continue()
+            print("Returning back to admin menu....")
+            time.sleep(0.5)
+            return
+
         car_found = False
         while True:
             try:

@@ -24,8 +24,41 @@ class Car(Vehicle):
 #-----------------------------------VEHICLE INSPECTION------------------------------------------------------
 
     def display_vehicle_info(self):
+        print("=" * 30)
+        print("ALL AVAILABLE VEHICLES")
+        print("=" * 30)
+        print()
+
         file_handler = FileHandler()
         data = file_handler.load_from_file("cars.txt")
+        cars = file_handler.load_from_file("cars.txt")
+        if not cars:
+            print("No cars available right now.")
+            self.enter_to_continue()
+            print("Returning back to menu.....\n")
+            time.sleep(0.5)
+            return
+
+        true_cars = [car for car in cars if car["availability"]]
+        if not true_cars:
+            print("No cars available right now.")
+            self.enter_to_continue()
+            print("Returning back to menu.....\n")
+            time.sleep(0.5)
+            return
+
+        available_cars = file_handler.load_from_file("available_cars.txt")
+        if not available_cars:
+            print("No Cars Available Right Now")
+            self.enter_to_continue()
+            print("Returning back to user menu.....\n")
+            time.sleep(0.5)
+            return
+
+        print("AVAILABLE CARS")
+        print("Please type brand and model name from any of the following to view it.")
+        self.display_available_cars_names()
+        print()
 
         while True:
             try:
@@ -89,7 +122,16 @@ class Car(Vehicle):
 
         file_handler = FileHandler()
         rental_history = file_handler.load_from_file("cars_rental_history.txt")
+        if not rental_history:
+            print("No cars rental history available.")
+            self.enter_to_continue()
+            print("Returning back to menu.....\n")
+            time.sleep(0.5)
+            return
+
         car_history = []
+        self.display_available_cars_names()
+        print()
         while True:
             try:
                 brand = input("Brand name (example: Toyota): ").strip()

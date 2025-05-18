@@ -1,1 +1,2 @@
 {'car_id': '83af67e3-d84c-4219-b472-919cc2ae7761', 'brand': 'Hyundai', 'model': 'Creta', 'days': 4, 'rental_date': '2025-05-08', 'return_date': '2025-05-14', 'total_cost': 240}
+{'car_id': '034b7a4c-6918-4a11-8d31-d32f599ee91f', 'brand': 'Toyota', 'model': 'Yaris', 'days': 3, 'rental_date': '2025-05-18', 'return_date': '2025-05-21', 'total_cost': 18000}

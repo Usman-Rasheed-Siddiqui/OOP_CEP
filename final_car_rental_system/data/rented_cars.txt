@@ -1,2 +1,2 @@
-{'car_id': 'd12a3642-9e7f-4e47-8f1d-9e39b6f17b7f', 'customer': 'muhammad.qazi@example.com', 'brand': 'Audi', 'model': 'Q5', 'rental_date': '2025-05-17', 'return_date': '2025-05-24', 'total_days': 7, 'total_cost': 1260}
-{'car_id': '2c026418-6111-4d4a-a91b-dffd2626ec7b', 'customer': 'usman@gmail.com', 'brand': 'Toyota', 'model': 'Corolla', 'rental_date': '2025-05-18', 'return_date': '2025-05-22', 'total_days': 4, 'total_cost': 220}
+{'car_id': '0f23cdd9-557e-4b45-8c3f-a81ed3a542ee', 'customer': 'usman@gmail.com', 'brand': 'Kia', 'model': 'Sportage', 'rental_date': '2025-05-18', 'return_date': '2025-05-20', 'total_days': 2, 'total_cost': 24000}
+{'car_id': '034b7a4c-6918-4a11-8d31-d32f599ee91f', 'customer': 'ayesha.siddiqui@example.com', 'brand': 'Toyota', 'model': 'Yaris', 'rental_date': '2025-05-18', 'return_date': '2025-05-21', 'total_days': 3, 'total_cost': 18000}

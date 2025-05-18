@@ -1,1 +1,0 @@
-{'car_id': 'd12a3642-9e7f-4e47-8f1d-9e39b6f17b7f', 'brand': 'Audi', 'model': 'Q5', 'days': 7, 'rental_date': '2025-05-17', 'return_date': '2025-05-24', 'total_cost': 1260}
