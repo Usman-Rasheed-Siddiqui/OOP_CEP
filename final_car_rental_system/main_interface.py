@@ -241,6 +241,7 @@ class Interface:
 
                 elif choice == "11":
                     self.admin.access_feedbacks()
+                    self.admin_menu()
 
                 elif choice == "12":
                     self.admin.update_info()
