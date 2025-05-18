@@ -1,7 +1,4 @@
 from abc import ABC, abstractmethod
-
-from django.core.exceptions import ValidationError
-
 from exception_handling.Exceptions import PasswordError
 from re import search, match
 import time
