@@ -377,8 +377,12 @@ class Customer(User):
                     for car in self.cars_rented:
                         if user["email"].lower() == car["customer"].lower():
                             self.car.car_id = car["car_id"]
+                            self.car.brand = car["brand"]
+                            self.car.model = car["model"]
                         else:
                             self.car.car_id = "No Car Rented Yet"
+                            self.car.brand = "No Car"
+                            self.car.model = "Rented Yet"
                     print (f"""
 {"="*30}
       USER INFORMATION
@@ -387,6 +391,7 @@ class Customer(User):
 {self.bold_italics}Email{self.reset} : {user["email"]}
 {self.bold_italics}Address{self.reset} : {user["address"]}
 {self.bold_italics}Balance{self.reset} : {f"{user["balance"]} PKR" if user["balance"] > 0 else f"{user["balance"]*-1} PKR With be deducted on next deposit"}
+{self.bold_italics}Rented Car Name{self.reset}: {self.car.brand} {self.car.model}
 {self.bold_italics}Rented Car ID{self.reset}: {self.car.car_id}
 {"="*30}
 """)
