@@ -6,5 +6,6 @@
 {'name': 'Alex Hales', 'email': 'alex.hales@example.com', 'password': 'hales@123', 'address': 'England', 'balance': 105201, 'rented_car': 0}
 {'name': 'Harry Brook', 'email': 'harry.brook@example.com', 'password': 'harry@123', 'address': 'London', 'balance': 168627, 'rented_car': 0}
 {'name': 'Usman Siddiqui', 'email': 'siddiqui.uas1@gmail.com', 'password': 'usman@123', 'address': 'House R5', 'balance': 409980, 'rented_car': 1}
-{'name': 'Usman Siddiqui', 'email': 'usman@gmail.com', 'password': 'usman@12345', 'address': 'House R5', 'balance': 390411, 'rented_car': 0}
+{'name': 'Usman Siddiqui', 'email': 'usman@gmail.com', 'password': 'usman@12345', 'address': 'House R5', 'balance': 320411, 'rented_car': 0}
 {'name': 'hamza rizwan', 'email': 'hamza@gmail.com', 'password': 'hamza@123', 'address': 'House 1', 'balance': 600000, 'rented_car': 0}
+{'name': 'Ahmed Muzammil', 'email': 'muzammil@email.com', 'password': 'ahmed@12345', 'address': 'house 2', 'balance': 400000, 'rented_car': 0}

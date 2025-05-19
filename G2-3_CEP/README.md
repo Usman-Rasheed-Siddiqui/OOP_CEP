@@ -7,7 +7,6 @@ A Python-based Car Rental System that allows users to rent cars, manage accounts
 
 - [🗃️ Project File Structure](#️project-file-structure-cli)
 - [⚡ Getting Started](#getting-started)
-  - [🔧 Installation](#installation)
   - [▶️ Running the App](#running-the-app)
 - [🌟 Features](#features)
 - [👤 Roles in the System](#roles-within-system)
@@ -21,7 +20,7 @@ A Python-based Car Rental System that allows users to rent cars, manage accounts
 
 ---
 
-## Project File Structure (CLI)
+## Project File Structure
 
 ```bash
 terminal_app/
@@ -65,23 +64,15 @@ terminal_app/
 
 ## Getting Started
 
-### Installation
-
-```bash
-#pip install -r requirements.txt
 ```
 
 Make sure you have Python 3.9+ installed.
 
 ### Running the App
 
-### For CLI:
 ```bash
 python main.py
 ```
-
-#Visit `http://localhost:5000` in your browser.
-
 ---
 
 ## Features
@@ -124,8 +115,6 @@ python main.py
 
 ## Roles Within System
 
-### For CLI:
-
 ### Customer (User)
 
 * Can register a new account and login securely
@@ -156,17 +145,10 @@ python main.py
 The project requires:
 
 * Python 3.9+
-* Flask
-* pdfkit
-* wkhtmltopdf (for generating PDFs)
-
-Install via `pip install -r requirements.txt`.
 
 ---
 
 ## Potential Problems:
-
-### For CLI:
 
 ### 1. No Screen Clearing after each operation
 
@@ -179,8 +161,6 @@ If you forget to take a screenshot of the receipt, you can use "Check Status" to
 ---
 
 ## Testing
-
-### FOR CLI:
 
 Make sure to:
 
