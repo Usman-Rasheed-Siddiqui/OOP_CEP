@@ -1,0 +1,2 @@
+{'car_id': '034b7a4c-6918-4a11-8d31-d32f599ee91f', 'customer': 'ayesha.siddiqui@example.com', 'brand': 'Toyota', 'model': 'Yaris', 'rental_date': '2025-05-18', 'return_date': '2025-05-21', 'total_days': 3, 'total_cost': 18000}
+{'car_id': '3ac92c77-105a-4ef2-a501-e94ff6c0e4b1', 'customer': 'siddiqui.uas1@gmail.com', 'brand': 'Tesla', 'model': 'Model 3', 'rental_date': '2025-05-18', 'return_date': '2025-05-21', 'total_days': 3, 'total_cost': 90000}
